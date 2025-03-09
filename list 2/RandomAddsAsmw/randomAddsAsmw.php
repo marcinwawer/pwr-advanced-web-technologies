@@ -11,8 +11,8 @@
 **/
 
 // Rejestracja CPT
-add_action('init', 'myplugin_rap_register_cpt');
-function myplugin_rap_register_cpt() {
+add_action('init', 'plugin_raasmw_register_cpt');
+function plugin_raasmw_register_cpt() {
     register_post_type('ads', [
         'label' => 'Advertisements',
         'public' => true,
@@ -22,14 +22,15 @@ function myplugin_rap_register_cpt() {
 }
 
 // Dodaj instrukcję nad edytorem posta (tylko dla CPT "ads")
-add_action('edit_form_after_title', 'myplugin_advertisement_instruction');
-function myplugin_advertisement_instruction($post) {
+add_action('edit_form_after_title', 'plugin_raasmw_instruction');
+function plugin_raasmw_instruction($post) {
     if ($post->post_type == 'ads') {
         echo '<div style="background: #fffbcc; padding: 10px; border: 1px solid #f2e086; margin-bottom: 10px;">
             <strong>📢 Enter your advertisement content below 📢</strong><br>
             <em>Switch to the "Text" tab in the editor if you want to create your ad using HTML.</em><br><br>
-            <strong>🔗 Optional: Add the "link" meta field to include a URL to your advertisement.</strong><br><br>
-            <strong>🔗 Optional: Add the "style" meta field to select a display style.</strong><br>
+            <strong>❗️ Required: Choose Ad Schedule for your ad on the right of the website, otherwise your ad will not be displayed.</strong><br><br>
+            <strong>🔗 Optional: Add the "link" custom field to include a URL to your advertisement.</strong><br><br>
+            <strong>🔗 Optional: Add the "style" custom field to select a display style.</strong><br>
             <span>🎨 Available styles: </span>
             <ul style="margin-top: 5px; padding-left: 20px;">
                 <li style="color: green;"><strong>📉 low</strong> - subtle highlight → price: $1000</li>
@@ -42,13 +43,71 @@ function myplugin_advertisement_instruction($post) {
     }
 }
 
+// Dodanie Meta Boxa do CPT "ads"
+function plugin_add_ad_schedule_metabox() {
+    add_meta_box(
+        'ad_schedule',
+        'Ad Schedule',
+        'myplugin_ad_schedule_metabox_callback',
+        'ads',
+        'side'
+    );
+}
+add_action('add_meta_boxes', 'plugin_add_ad_schedule_metabox');
+
+// Callback do wyświetlenia Meta Boxa
+function myplugin_ad_schedule_metabox_callback($post) {
+    $start_date = get_post_meta($post->ID, '_ad_start_date', true);
+    $end_date = get_post_meta($post->ID, '_ad_end_date', true);
+    
+    wp_nonce_field('plugin_save_ad_schedule', 'plugin_ad_schedule_nonce');
+    ?>
+    <label for="ad_start_date">Start Date:</label>
+    <input type="date" id="ad_start_date" name="ad_start_date" value="<?php echo esc_attr($start_date); ?>"><br><br>
+    <label for="ad_end_date">End Date:</label>
+    <input type="date" id="ad_end_date" name="ad_end_date" value="<?php echo esc_attr($end_date); ?>">
+    <?php
+}
+
+// Zapisujemy wartości Meta Boxa
+function plugin_save_ad_schedule($post_id) {
+    if (!isset($_POST['plugin_ad_schedule_nonce']) || !wp_verify_nonce($_POST['plugin_ad_schedule_nonce'], 'plugin_save_ad_schedule')) {
+        return;
+    }
+
+    if (isset($_POST['ad_start_date'])) {
+        update_post_meta($post_id, '_ad_start_date', sanitize_text_field($_POST['ad_start_date']));
+    }
+    if (isset($_POST['ad_end_date'])) {
+        update_post_meta($post_id, '_ad_end_date', sanitize_text_field($_POST['ad_end_date']));
+    }
+}
+add_action('save_post', 'plugin_save_ad_schedule');
+
 // Funkcja dodająca reklamę do treści posta
-function myplugin_rap_display_random_ad($content) {
+function plugin_raasmw_display_random_ad($content) {
     if ((is_single() || is_home()) && !is_admin()) {
+        $today = date('Y-m-d');
+
         $ads = get_posts([
             'post_type'   => 'ads',
             'orderby'     => 'rand',
             'numberposts' => 1,
+            'meta_query'  => [
+                'relation' => 'AND',
+                [
+                    'key'     => '_ad_start_date',
+                    'value'   => $today,
+                    'compare' => '<=',
+                    'type'    => 'DATE',
+                ],
+                [
+                    'key'     => '_ad_end_date',
+                    'value'   => $today,
+                    'compare' => '>=',
+                    'type'    => 'DATE',
+                ],
+            ],
         ]);
 
         if (!empty($ads)) {
@@ -86,4 +145,4 @@ function myplugin_rap_display_random_ad($content) {
 }
 
 // Dodaj filtr do treści posta
-add_filter('the_content', 'myplugin_rap_display_random_ad');
+add_filter('the_content', 'plugin_raasmw_display_random_ad');
