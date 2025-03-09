@@ -1,29 +1,43 @@
 <?php
-/*
-Plugin Name: Random Announcement CPT
-Description: Wyświetla losowe ogłoszenie przed treścią posta
-Version: 1.1
-*/
+/**
+* Plugin Name: Random Ads
+* Plugin URI: https://www.google.com/
+* Description: Easily add random ads to your posts.
+* Version: 1.0
+* Requires at least: 5.0
+* Requires PHP: 7.2
+* Author: Aleksander Szczepanowsi & Marcin Wawer
+* Author URI: https://www.google.com/
+**/
 
 // Rejestracja CPT
 add_action('init', 'myplugin_rap_register_cpt');
 function myplugin_rap_register_cpt() {
-    register_post_type('ogloszenie', [
-        'label' => 'Ogłoszenia',
+    register_post_type('ads', [
+        'label' => 'Advertisements',
         'public' => true,
-        'menu_icon' => 'dashicons-megaphone',
+        'menu_icon' => 'dashicons-star-empty',
         'supports' => ['title', 'editor', 'custom-fields'],
     ]);
 }
 
-// Dodaj instrukcję nad edytorem posta (tylko dla CPT "ogloszenie")
+// Dodaj instrukcję nad edytorem posta (tylko dla CPT "ads")
 add_action('edit_form_after_title', 'myplugin_advertisement_instruction');
 function myplugin_advertisement_instruction($post) {
-    if ($post->post_type == 'ogloszenie') {
+    if ($post->post_type == 'ads') {
         echo '<div style="background: #fffbcc; padding: 10px; border: 1px solid #f2e086; margin-bottom: 10px;">
-            <strong>📢 Wpisz treść reklamy w HTML-u poniżej:</strong><br>
-            <em>Przełącz się na zakładkę "Tekst" edytora, aby poprawnie wkleić kod HTML reklamy.</em><br>
-            <strong>🔗 Opcjonalnie: Dodaj pole meta "link" do reklamy, aby dodać odnośnik do strony.</strong>
+            <strong>📢 Enter your advertisement content below 📢</strong><br>
+            <em>Switch to the "Text" tab in the editor if you want to create your ad using HTML.</em><br><br>
+            <strong>🔗 Optional: Add the "link" meta field to include a URL to your advertisement.</strong><br><br>
+            <strong>🔗 Optional: Add the "style" meta field to select a display style.</strong><br>
+            <span>🎨 Available styles: </span>
+            <ul style="margin-top: 5px; padding-left: 20px;">
+                <li style="color: green;"><strong>📉 low</strong> - subtle highlight → price: $1000</li>
+                <li style="color: orange;"><strong>📊 medium</strong> - moderate highlight → price: $5000</li>
+                <li style="color: red;"><strong>📈 high</strong> - strong highlight → price: $10000</li>
+                <li style="color: darkred;"><strong>🚨 critical</strong> - very important advertisement → price: $50000</li>
+            </ul>
+            <small>If you do not see custom fields, you need to click Screen Options in upper-right corner and check Custom Fields checkbox :)</small>
         </div>';
     }
 }
@@ -32,7 +46,7 @@ function myplugin_advertisement_instruction($post) {
 function myplugin_rap_display_random_ad($content) {
     if ((is_single() || is_home()) && !is_admin()) {
         $ads = get_posts([
-            'post_type'   => 'ogloszenie',
+            'post_type'   => 'ads',
             'orderby'     => 'rand',
             'numberposts' => 1,
         ]);
@@ -53,7 +67,7 @@ function myplugin_rap_display_random_ad($content) {
 
             // Sprawdź, czy link istnieje i czy jest poprawnym URL-em
             if (!empty($link) && filter_var($link, FILTER_VALIDATE_URL)) {
-                $link_html = "<p class='ad-link'><a href='{$link}' target='_blank' rel='nofollow'>Więcej informacji</a></p>";
+                $link_html = "<p class='ad-link'><a href='{$link}' target='_blank' rel='nofollow'>Learn more...</a></p>";
             }
 
             // Rejestruj plik CSS
@@ -73,15 +87,3 @@ function myplugin_rap_display_random_ad($content) {
 
 // Dodaj filtr do treści posta
 add_filter('the_content', 'myplugin_rap_display_random_ad');
-
-// Dodaj style dla linku w ogłoszeniu
-add_action('wp_head', function() {
-    echo '<style>
-        .ad-link {
-            font-size: 12px;
-            font-style: italic;
-            text-decoration: underline;
-            margin-top: 5px;
-        }
-    </style>';
-});
