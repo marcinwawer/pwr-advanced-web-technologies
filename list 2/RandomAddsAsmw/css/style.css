@@ -1,45 +1,67 @@
 .low-ad {
-    padding: 10px;
-    background-color: #f3f3f3;
-    color: #444;
-    border-left: 4px solid #bbb;
-    font-size: 14px;
-    margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f3f3f3;
+  color: #444;
+  border-left: 4px solid #bbb;
+  font-size: 14px;
+  margin-bottom: 20px;
 }
 
 .medium-ad {
-    padding: 15px;
-    background-color: #fff8e6;
-    color: #333;
-    border-left: 4px solid #f0ad4e;
-    font-size: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 15px;
+  background-color: #fff8e6;
+  color: #333;
+  border-left: 4px solid #f0ad4e;
+  font-size: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .high-ad {
-    padding: 20px;
-    background-color: #fdecea;
-    color: #a94442;
-    border-left: 6px solid #d9534f;
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 25px;
-    box-shadow: 0 3px 10px rgba(217,83,79,0.3);
+  padding: 20px;
+  background-color: #fdecea;
+  color: #a94442;
+  border-left: 6px solid #d9534f;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  box-shadow: 0 3px 10px rgba(217, 83, 79, 0.3);
+}
+
+.critical-ad {
+  padding: 25px;
+  background-color: #ec3434;
+  color: #fff;
+  border: 5px solid #e12b2b;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+  animation: pulse 0.5s infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.1);
+  }
 }
 
 .ad-link {
-    font-size: 14px;
-    font-style: italic;
-    text-decoration: underline;
-    margin-top: 5px;
-    display: block;
+  font-size: 14px;
+  font-style: italic;
+  text-decoration: underline;
+  margin-top: 5px;
+  display: block;
 }
 .ad-link a {
-    color: blueviolet;
-    text-decoration: underline;
+  color: blueviolet;
+  text-decoration: underline;
 }
 .ad-link a:hover {
-    color: blue;
-    text-decoration: none;
+  color: blue;
+  text-decoration: none;
 }

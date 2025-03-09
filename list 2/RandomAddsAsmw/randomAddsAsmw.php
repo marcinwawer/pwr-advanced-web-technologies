@@ -115,7 +115,7 @@ function plugin_raasmw_display_random_ad($content) {
 
             // Pobierz styl z pola meta ('low', 'medium', 'high')
             $style = get_post_meta($ad->ID, 'style', true);
-            $allowed_styles = ['low', 'medium', 'high'];
+            $allowed_styles = ['low', 'medium', 'high', 'critical'];
             if (!in_array($style, $allowed_styles)) {
                 $style = 'low'; // domyślny styl
             }
