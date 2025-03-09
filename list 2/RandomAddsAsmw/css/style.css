@@ -27,3 +27,19 @@
     margin-bottom: 25px;
     box-shadow: 0 3px 10px rgba(217,83,79,0.3);
 }
+
+.ad-link {
+    font-size: 12px;
+    font-style: italic;
+    text-decoration: underline;
+    margin-top: 5px;
+    display: block;
+}
+.ad-link a {
+    color: blueviolet;
+    text-decoration: underline;
+}
+.ad-link a:hover {
+    color: blue;
+    text-decoration: none;
+}
