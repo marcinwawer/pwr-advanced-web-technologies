@@ -10,7 +10,6 @@
 * Author URI: https://www.google.com/
 **/
 
-// Rejestracja CPT
 add_action('init', 'plugin_raasmw_register_cpt');
 function plugin_raasmw_register_cpt() {
     register_post_type('ads', [
@@ -21,7 +20,6 @@ function plugin_raasmw_register_cpt() {
     ]);
 }
 
-// Dodaj instrukcję nad edytorem posta (tylko dla CPT "ads")
 add_action('edit_form_after_title', 'plugin_raasmw_instruction');
 function plugin_raasmw_instruction($post) {
     if ($post->post_type == 'ads') {
@@ -43,7 +41,6 @@ function plugin_raasmw_instruction($post) {
     }
 }
 
-// Dodanie Meta Boxa do CPT "ads"
 function plugin_add_ad_schedule_metabox() {
     add_meta_box(
         'ad_schedule',
@@ -55,7 +52,6 @@ function plugin_add_ad_schedule_metabox() {
 }
 add_action('add_meta_boxes', 'plugin_add_ad_schedule_metabox');
 
-// Callback do wyświetlenia Meta Boxa
 function myplugin_ad_schedule_metabox_callback($post) {
     $start_date = get_post_meta($post->ID, '_ad_start_date', true);
     $end_date = get_post_meta($post->ID, '_ad_end_date', true);
@@ -69,7 +65,6 @@ function myplugin_ad_schedule_metabox_callback($post) {
     <?php
 }
 
-// Zapisujemy wartości Meta Boxa
 function plugin_save_ad_schedule($post_id) {
     if (!isset($_POST['plugin_ad_schedule_nonce']) || !wp_verify_nonce($_POST['plugin_ad_schedule_nonce'], 'plugin_save_ad_schedule')) {
         return;
@@ -84,7 +79,6 @@ function plugin_save_ad_schedule($post_id) {
 }
 add_action('save_post', 'plugin_save_ad_schedule');
 
-// Funkcja dodająca reklamę do treści posta
 function plugin_raasmw_display_random_ad($content) {
     if ((is_single() || is_home()) && !is_admin()) {
         $today = date('Y-m-d');
@@ -113,36 +107,29 @@ function plugin_raasmw_display_random_ad($content) {
         if (!empty($ads)) {
             $ad = $ads[0];
 
-            // Pobierz styl z pola meta ('low', 'medium', 'high')
             $style = get_post_meta($ad->ID, 'style', true);
             $allowed_styles = ['low', 'medium', 'high', 'critical'];
             if (!in_array($style, $allowed_styles)) {
-                $style = 'low'; // domyślny styl
+                $style = 'low'; 
             }
 
-            // Pobierz link z pola meta
             $link = get_post_meta($ad->ID, 'link', true);
             $link_html = '';
 
-            // Sprawdź, czy link istnieje i czy jest poprawnym URL-em
             if (!empty($link) && filter_var($link, FILTER_VALIDATE_URL)) {
                 $link_html = "<p class='ad-link'><a href='{$link}' target='_blank' rel='nofollow'>Learn more...</a></p>";
             }
 
-            // Rejestruj plik CSS
             wp_enqueue_style(
                 'random-ad-styles',
                 plugins_url('css/style.css', __FILE__)
             );
 
-            // Pobierz treść reklamy i przypisz klasę CSS
             $ad_content = html_entity_decode($ad->post_content);
-
             return "<div class='random-ad {$style}-ad'>{$ad_content}{$link_html}</div>" . $content;
         }
     }
     return $content;
 }
 
-// Dodaj filtr do treści posta
 add_filter('the_content', 'plugin_raasmw_display_random_ad');
