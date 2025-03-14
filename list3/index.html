@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="sass/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Sass</title>
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="left-side-navbar">
+          <img
+            src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNhdCI+PHBhdGggZD0iTTEyIDVjLjY3IDAgMS4zNS4wOSAyIC4yNiAxLjc4LTIgNS4wMy0yLjg0IDYuNDItMi4yNiAxLjQuNTgtLjQyIDctLjQyIDcgLjU3IDEuMDcgMSAyLjI0IDEgMy40NEMyMSAxNy45IDE2Ljk3IDIxIDEyIDIxcy05LTMtOS03LjU2YzAtMS4yNS41LTIuNCAxLTMuNDQgMCAwLTEuODktNi40Mi0uNS03IDEuMzktLjU4IDQuNzIuMjMgNi41IDIuMjNBOS4wNCA5LjA0IDAgMCAxIDEyIDVaIi8+PHBhdGggZD0iTTggMTR2LjUiLz48cGF0aCBkPSJNMTYgMTR2LjUiLz48cGF0aCBkPSJNMTEuMjUgMTYuMjVoMS41TDEyIDE3bC0uNzUtLjc1WiIvPjwvc3ZnPg=="
+            alt=""
+          />
+          <p>Adoptify</p>
+        </div>
+        <div class="right-side-navbar">
+          <a href="/animals.html">Nasze zwierzaki</a>
+          <a href="#">Nasze schroniska</a>
+          <a href="#">FAQ</a>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="content">
+        <h1>Nie kupuj! Adoptuj!</h1>
+        <p style="text-align: center">
+          Te zwierzaki potrzebują pomocy! Jesteśmy profesjonalnym schroniskiem i
+          szukamy opiekunów.
+        </p>
+        <div class="links">
+          <a href="/animals.html" class="button"
+            >Nasze zwierzaki
+            <img
+              src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1hcnJvdy1yaWdodCI+PHBhdGggZD0iTTUgMTJoMTQiLz48cGF0aCBkPSJtMTIgNSA3IDctNyA3Ii8+PC9zdmc+"
+              alt=""
+          /></a>
+          <a href="#" class="button-light">O nas</a>
+        </div>
+      </div>
+      <h1 style="font-size: 3vw">Nasi sponsorzy</h1>
+      <div class="sponsors">
+        <div>
+          <img
+            src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWRvZyI+PHBhdGggZD0iTTExLjI1IDE2LjI1aDEuNUwxMiAxN3oiLz48cGF0aCBkPSJNMTYgMTR2LjUiLz48cGF0aCBkPSJNNC40MiAxMS4yNDdBMTMuMTUyIDEzLjE1MiAwIDAgMCA0IDE0LjU1NkM0IDE4LjcyOCA3LjU4MiAyMSAxMiAyMXM4LTIuMjcyIDgtNi40NDRhMTEuNzAyIDExLjcwMiAwIDAgMC0uNDkzLTMuMzA5Ii8+PHBhdGggZD0iTTggMTR2LjUiLz48cGF0aCBkPSJNOC41IDguNWMtLjM4NCAxLjA1LTEuMDgzIDIuMDI4LTIuMzQ0IDIuNS0xLjkzMS43MjItMy41NzYtLjI5Ny0zLjY1Ni0xLS4xMTMtLjk5NCAxLjE3Ny02LjUzIDQtNyAxLjkyMy0uMzIxIDMuNjUxLjg0NSAzLjY1MSAyLjIzNUE3LjQ5NyA3LjQ5NyAwIDAgMSAxNCA1LjI3N2MwLTEuMzkgMS44NDQtMi41OTggMy43NjctMi4yNzcgMi44MjMuNDcgNC4xMTMgNi4wMDYgNCA3LS4wOC43MDMtMS43MjUgMS43MjItMy42NTYgMS0xLjI2MS0uNDcyLTEuODU1LTEuNDUtMi4yMzktMi41Ii8+PC9zdmc+"
+            alt="Pawsitive Change logo"
+          />Pawsitive Change
+        </div>
+        <div>
+          <img
+            src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJvbmUiPjxwYXRoIGQ9Ik0xNyAxMGMuNy0uNyAxLjY5IDAgMi41IDBhMi41IDIuNSAwIDEgMCAwLTUgLjUuNSAwIDAgMS0uNS0uNSAyLjUgMi41IDAgMSAwLTUgMGMwIC44MS43IDEuOCAwIDIuNWwtNyA3Yy0uNy43LTEuNjkgMC0yLjUgMGEyLjUgMi41IDAgMCAwIDAgNWMuMjggMCAuNS4yMi41LjVhMi41IDIuNSAwIDEgMCA1IDBjMC0uODEtLjctMS44IDAtMi41WiIvPjwvc3ZnPg=="
+            alt="Compassion for Critters logo"
+          />Compassion for Critters
+        </div>
+        <div>
+          <img
+            src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNxdWlycmVsIj48cGF0aCBkPSJNMTUuMjM2IDIyYTMgMyAwIDAgMC0yLjItNSIvPjxwYXRoIGQ9Ik0xNiAyMGEzIDMgMCAwIDEgMy0zaDFhMiAyIDAgMCAwIDItMnYtMmE0IDQgMCAwIDAtNC00VjQiLz48cGF0aCBkPSJNMTggMTNoLjAxIi8+PHBhdGggZD0iTTE4IDZhNCA0IDAgMCAwLTQgNCA3IDcgMCAwIDAtNyA3YzAtNSA0LTUgNC0xMC41YTQuNSA0LjUgMCAxIDAtOSAwIDIuNSAyLjUgMCAwIDAgNSAwQzcgMTAgMyAxMSAzIDE3YzAgMi44IDIuMiA1IDUgNWgxMCIvPjwvc3ZnPg=="
+            alt="Whiskers & Tails logo"
+          />Whiskers & Tails
+        </div>
+        <div>
+          <img
+            src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXN0aWNrZXIiPjxwYXRoIGQ9Ik0xNS41IDNINWEyIDIgMCAwIDAtMiAydjE0YzAgMS4xLjkgMiAyIDJoMTRhMiAyIDAgMCAwIDItMlY4LjVMMTUuNSAzWiIvPjxwYXRoIGQ9Ik0xNCAzdjRhMiAyIDAgMCAwIDIgMmg0Ii8+PHBhdGggZD0iTTggMTNoLjAxIi8+PHBhdGggZD0iTTE2IDEzaC4wMSIvPjxwYXRoIGQ9Ik0xMCAxNnMuOCAxIDIgMWMxLjMgMCAyLTEgMi0xIi8+PC9zdmc+"
+            alt="Rescue Paws logo"
+          />Rescue Paws
+        </div>
+      </div>
+    </main>
+    <footer>Created by Szczepanowski&Wawer</footer>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+.content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+}
+.content h1 {
+  font-size: 5vw;
+}
+.content .links {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  gap: 15px;
+}
+
+.sponsors {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  gap: 15px;
+}
+.sponsors div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2vw;
+}/*# sourceMappingURL=home.css.map */

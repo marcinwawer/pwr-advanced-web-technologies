@@ -1,0 +1,45 @@
+.animals {
+  display: grid;
+  max-width: 75%;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: auto;
+  gap: 20px;
+}
+.animals .item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+.animals .item img {
+  width: 100%;
+}
+.animals .info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-direction: row;
+  margin-top: 1rem;
+}
+.animals .info .data div {
+  display: flex;
+}
+.animals .info .actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 1300px) {
+  .animals {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .animals {
+    grid-template-columns: 1fr;
+  }
+}/*# sourceMappingURL=animals.css.map */

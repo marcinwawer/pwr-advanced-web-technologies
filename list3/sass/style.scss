@@ -1,0 +1,42 @@
+@import "pages/home.scss";
+@import "pages/animals.scss";
+@import "components/hrefAsButton.scss";
+@import "helpers/variables.scss";
+@import "components/navbar.scss";
+* {
+  box-sizing: border-box;
+}
+html {
+  font-family: $font-stack;
+  background-color: $body-background-color;
+  margin: 0;
+  padding: 0;
+  margin-top: 1rem;
+  height: 100%;
+  width: 100%;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+}
+
+main {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+footer {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f1f1f1;
+  text-align: center;
+  padding: 10px;
+}

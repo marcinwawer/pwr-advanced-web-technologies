@@ -1,0 +1,31 @@
+@import "../helpers/mixins.scss";
+@import "../helpers/variables.scss";
+
+@function make-darker($value, $amount: 10%) {
+  @return darken($value, $amount);
+}
+
+a.button {
+  @include buttonTheme($default-button-color);
+  @include container($direction: row);
+
+  &:hover {
+    background-color: make-darker($default-button-color);
+  }
+}
+
+a.button-dark {
+  @include buttonTheme($dark-button-color, white);
+
+  &:hover {
+    background-color: make-darker($dark-button-color);
+  }
+}
+
+a.button-light {
+  @include buttonTheme($light-button-color);
+
+  &:hover {
+    background-color: make-darker($light-button-color);
+  }
+}
