@@ -1,4 +1,4 @@
-@mixin buttonTheme($theme, $text-color: black) {
+@mixin buttonTheme($theme, $text-color: white) {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,6 +11,7 @@
   border: none;
   cursor: pointer;
 }
+
 @mixin container($justify: center, $direction: column) {
   display: flex;
   align-items: center;

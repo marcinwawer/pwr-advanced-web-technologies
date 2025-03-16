@@ -1,6 +1,3 @@
-@import "../helpers/mixins.scss";
-@import "../helpers/variables.scss";
-
 .content {
   @include container();
   h1 {
