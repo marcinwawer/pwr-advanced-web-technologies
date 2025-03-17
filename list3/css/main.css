@@ -54,6 +54,16 @@ a.button-light:hover {
   background-color: #24f2a0;
 }
 
+.about .social-buttons .btn {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+}
+
 .navbar {
   background-color: rgb(15, 203, 128);
   display: flex;
@@ -285,6 +295,87 @@ footer {
     padding: 7.5px;
   }
   .animal-details img {
+    width: 100%;
+  }
+}
+.about {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 30px;
+  max-width: 75%;
+  padding: 22.5px;
+  text-align: left;
+  margin: auto;
+}
+.about .about-images {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 40%;
+}
+.about img {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 16px;
+}
+.about .about-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 60%;
+  padding: 15px;
+}
+.about h2 {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 7.5px;
+}
+.about p {
+  font-size: 18px;
+  margin-bottom: 7.5px;
+}
+.about .social-buttons {
+  display: flex;
+  gap: 15px;
+  padding-top: 20px;
+}
+.about .social-buttons .btn {
+  padding: 10px 30px;
+  text-decoration: none;
+  color: white;
+  border-radius: 7.5px;
+  transition: background 0.3s ease;
+}
+.about .social-buttons .btn-facebook {
+  background-color: #3b5998;
+}
+.about .social-buttons .btn-facebook:hover {
+  background-color: #2d4373;
+}
+.about .social-buttons .btn-instagram {
+  background-color: #e1306c;
+}
+.about .social-buttons .btn-instagram:hover {
+  background-color: #c21c54;
+}
+.about .social-buttons .btn-twitter {
+  background-color: #1da1f2;
+}
+.about .social-buttons .btn-twitter:hover {
+  background-color: #0c85d0;
+}
+
+@media (max-width: 900px) {
+  .about {
+    flex-direction: column;
+    text-align: center;
+  }
+  .about img {
+    width: 80%;
+  }
+  .about .about-info {
     width: 100%;
   }
 }

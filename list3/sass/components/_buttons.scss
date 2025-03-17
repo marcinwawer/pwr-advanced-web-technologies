@@ -22,3 +22,13 @@ a.button-light {
     background-color: make-darker($light-button-color);
   }
 }
+
+%button-social-base {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+}
