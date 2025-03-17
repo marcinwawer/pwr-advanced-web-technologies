@@ -1,0 +1,3 @@
+@function make-darker($value, $amount: 10%) {
+    @return darken($value, $amount);
+}

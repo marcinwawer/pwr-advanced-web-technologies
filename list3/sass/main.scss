@@ -1,3 +1,4 @@
+@import "helpers/functions";
 @import "helpers/mixins";
 @import "helpers/variables.scss";
 @import "components/buttons.scss";
@@ -6,6 +7,7 @@
 @import "layout/footer";
 @import "pages/animals";
 @import "pages/home";
+@import "pages/animal-details";
 
 * {
   box-sizing: border-box;

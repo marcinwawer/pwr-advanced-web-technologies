@@ -1,7 +1,3 @@
-@function make-darker($value, $amount: 10%) {
-  @return darken($value, $amount);
-}
-
 a.button {
   @include buttonTheme($default-button-color);
   @include container($direction: row);

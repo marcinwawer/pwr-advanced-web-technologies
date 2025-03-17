@@ -1,56 +1,58 @@
 .animals {
   display: grid;
-  max-width: 75%;
+  max-width: $container-width;
   grid-template-columns: repeat(5, 1fr);
   grid-auto-rows: auto;
-  gap: 20px;
+  gap: $gap-width;
 
   .item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     text-align: center;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    height: 100%; 
-  
+    padding: $gap-width / 2; 
+    border: 1px solid $item-border-color;
+    border-radius: $item-border-radius;
+    height: 100%;
+
     img {
       width: 100%;
-      max-width: 200px;
-      height: 200px; 
-      object-fit: cover; 
-      border-radius: 10px; 
+      max-width: $image-size;
+      height: $image-size;
+      object-fit: cover;
+      border-radius: $item-border-radius;
     }
-  
+
     .info {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      flex-grow: 1; 
+      flex-grow: 1;
       width: 100%;
     }
 
     .data {
-      padding: 10px;
+      padding: $gap-width / 2;
     }
-  
+
     .actions {
-      display: flex;
-      justify-content: center; 
-      margin-top: auto; 
+      @include flex-center(row, center);
+      margin-top: auto;
     }
   }
 }
 
 @media (max-width: 1300px) {
   .animals {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr); 
   }
 }
 
 @media (max-width: 900px) {
   .animals {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr); 
+  }
+}
+
+@media (max-width: 600px) {
+  .animals {
+    grid-template-columns: 1fr; 
   }
 }
