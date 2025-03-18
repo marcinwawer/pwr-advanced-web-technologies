@@ -1,10 +1,16 @@
 .content {
   @include container();
+
   h1 {
-    font-size: 5vw;
+    font-size: calc(3vw + 10px);
   }
   .links {
     @include container($direction: row);
+  }
+
+  #landing-photo {
+    border-radius: 25px;
+    width: 75%;
   }
 }
 
@@ -15,5 +21,11 @@
     justify-content: center;
     align-items: center;
     font-size: 2vw;
+
+    img {
+      width: 1em;
+      height: 1em;
+      object-fit: contain;
+    }
   }
 }

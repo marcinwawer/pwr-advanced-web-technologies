@@ -1,97 +1,104 @@
 .about {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: $gap-width * 2;
+  max-width: $container-width;
+  padding: $gap-width * 1.5;
+  text-align: left;
+  margin: auto;
+
+  .about-images {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: $gap-width * 2;
-    max-width: $container-width;
-    padding: $gap-width * 1.5;
-    text-align: left;
-    margin: auto;
+    flex-direction: column;
+    align-items: center;
+    gap: $gap-width;
+    width: 40%;
+  }
 
-    .about-images {
-        display: flex;
-        flex-direction: column; 
-        gap: $gap-width;
-        width: 40%; 
+  img {
+    width: 100%;
+    max-width: $image-size * 3;
+    height: auto;
+    border-radius: $item-border-radius * 2;
+  }
+
+  .about-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 60%;
+  }
+
+  h2 {
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: $gap-width / 2;
+  }
+
+  p {
+    font-size: 18px;
+    margin-bottom: $gap-width / 2;
+  }
+
+  .social-buttons {
+    display: flex;
+    gap: $gap-width;
+    padding-top: 20px;
+
+    .btn {
+      @extend %button-social-base;
+      padding: $gap-width / 1.5 $gap-width * 2;
+      text-decoration: none;
+      color: white;
+      border-radius: $gap-width / 2;
+      transition: background 0.3s ease;
     }
 
-    img {
-        width: 100%;
-        max-width: $image-size * 3;
-        height: auto;
-        border-radius: $item-border-radius * 2;
+    .btn-facebook {
+      background-color: #3b5998;
+
+      &:hover {
+        background-color: make-darker(#3b5998);
+      }
     }
 
-    .about-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 60%;
-        padding: $gap-width;
+    .btn-instagram {
+      background-color: #e1306c;
+
+      &:hover {
+        background-color: make-darker(#e1306c);
+      }
     }
 
-    h2 {
-        font-size: 40px;
-        font-weight: bold;
-        margin-bottom: $gap-width / 2;
+    .btn-twitter {
+      background-color: #1da1f2;
+
+      &:hover {
+        background-color: make-darker(#1da1f2);
+      }
     }
-
-    p {
-        font-size: 18px;
-        margin-bottom: $gap-width / 2;
-    }
-
-    .social-buttons {
-        display: flex;
-        gap: $gap-width;
-        padding-top: 20px;
-
-        .btn {
-            @extend %button-social-base;
-            padding: $gap-width / 1.5 $gap-width * 2;
-            text-decoration: none;
-            color: white;
-            border-radius: $gap-width / 2;
-            transition: background 0.3s ease;
-        }
-
-        .btn-facebook {
-            background-color: #3b5998;
-
-            &:hover {
-                background-color: make-darker(#3b5998);
-            }
-        }
-
-        .btn-instagram {
-            background-color: #e1306c;
-
-            &:hover {
-                background-color: make-darker(#e1306c);
-            }
-        }
-
-        .btn-twitter {
-            background-color: #1da1f2;
-
-            &:hover {
-                background-color: make-darker(#1da1f2);
-            }
-        }
-    }
+  }
 }
 
 @media (max-width: 900px) {
-    .about {
-        flex-direction: column;
-        text-align: center;
+  .about {
+    flex-direction: column;
+    text-align: center;
 
-        img {
-            width: 80%;
-        }
-
-        .about-info {
-            width: 100%;
-        }
+    .about-images {
+      width: 100%;
     }
+
+    img {
+      width: 80%;
+    }
+
+    .about-info {
+      width: 100%;
+    }
+  }
+  .social-buttons {
+    flex-direction: column;
+  }
 }

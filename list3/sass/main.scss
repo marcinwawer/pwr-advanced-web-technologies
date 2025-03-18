@@ -13,7 +13,8 @@
 * {
   box-sizing: border-box;
 }
-html, body {
+html,
+body {
   font-family: $font-stack;
   background-color: $body-background-color;
   margin: 0;
@@ -26,8 +27,8 @@ html, body {
 }
 
 main {
-  flex: 1; 
-  margin-top: 1rem;
+  flex: 1;
+  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;

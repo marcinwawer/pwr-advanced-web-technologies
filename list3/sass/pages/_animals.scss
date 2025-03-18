@@ -4,16 +4,17 @@
   grid-template-columns: repeat(5, 1fr);
   grid-auto-rows: auto;
   gap: $gap-width;
+  width: 100%;
 
   .item {
     text-align: center;
-    padding: $gap-width / 2; 
+    padding: $gap-width / 2;
     border: 1px solid $item-border-color;
     border-radius: $item-border-radius;
     height: 100%;
 
     img {
-      width: 100%;
+      width: calc(100% - $gap-width);
       max-width: $image-size;
       height: $image-size;
       object-fit: cover;
@@ -41,18 +42,18 @@
 
 @media (max-width: 1300px) {
   .animals {
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 900px) {
   .animals {
-    grid-template-columns: repeat(2, 1fr); 
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
   .animals {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
   }
 }

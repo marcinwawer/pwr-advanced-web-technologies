@@ -1,3 +1,7 @@
 @function make-darker($value, $amount: 10%) {
-    @return darken($value, $amount);
+  @return darken($value, $amount);
+}
+
+@function scale-space($base, $factor: 1) {
+  @return $base * $factor;
 }

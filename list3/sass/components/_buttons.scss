@@ -1,6 +1,7 @@
 a.button {
   @include buttonTheme($default-button-color);
   @include container($direction: row);
+  transition: background 0.3s ease;
 
   &:hover {
     background-color: make-darker($default-button-color);
@@ -9,6 +10,7 @@ a.button {
 
 a.button-dark {
   @include buttonTheme($dark-button-color, white);
+  transition: background 0.3s ease;
 
   &:hover {
     background-color: make-darker($dark-button-color);
@@ -17,6 +19,7 @@ a.button-dark {
 
 a.button-light {
   @include buttonTheme($light-button-color);
+  transition: background 0.3s ease;
 
   &:hover {
     background-color: make-darker($light-button-color);

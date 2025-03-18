@@ -1,84 +1,84 @@
 .animal-details {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: $gap-width * 2;
+  max-width: $container-width;
+  padding: $gap-width * 1.5;
+  text-align: left;
+
+  img {
+    width: 100%;
+    max-width: $image-size * 2;
+    height: auto;
+    border-radius: $item-border-radius * 2;
+  }
+
+  .info {
     display: flex;
-    flex-direction: row; 
+    flex-direction: column;
+    justify-content: center;
+    width: 60%;
+  }
+
+  .animal-name {
+    font-size: 80px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: $gap-width / 4;
+  }
+
+  .animal-description {
+    font-size: 20px;
+    color: black;
+    max-width: $image-size * 2;
+    margin-top: 0;
+  }
+
+  .adopt-button {
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: $gap-width * 2;
-    max-width: $container-width;
-    padding: $gap-width * 1.5; 
-    text-align: left;
-  
+    background-color: $default-button-color;
+    color: white;
+    padding: $gap-width / 1.2;
+    margin-top: $gap-width;
+    text-decoration: none;
+    border-radius: $gap-width / 2;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background-color: $dark-button-color;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .animal-details {
+    flex-direction: column;
+    align-items: center;
+    width: $container-width * 0.8;
+    padding: $gap-width;
+
     img {
-        width: 100%;
-        max-width: $image-size * 2; 
-        height: auto;
-        border-radius: $item-border-radius * 2; 
+      width: 80%;
+      max-width: $image-size * 1.5;
     }
-  
+
     .info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 60%;
-    }
-  
-    .animal-name {
-        font-size: 80px; 
-        font-weight: bold;
-        color: black;
-        margin-bottom: $gap-width / 4;
-    }
-  
-    .animal-description {
-        font-size: 20px; 
-        color: black;
-        max-width: $image-size * 2;
-        margin-top: 0;
-    }
-  
-    .adopt-button {
-        display: flex;
-        justify-content: center; 
-        align-items: center; 
-        background-color: $default-button-color;
-        color: white;
-        padding: $gap-width / 1.2;
-        margin-top: $gap-width;
-        text-decoration: none;
-        border-radius: $gap-width / 2;
-        transition: background 0.3s ease;
-    
-        &:hover {
-            background-color: $dark-button-color;
-        }
-    }
-    }
-  
-  @media (max-width: 900px) {
-    .animal-details {
-      flex-direction: column;
-      align-items: center;
-      width: $container-width * 0.8;
-      padding: $gap-width;
-  
-      img {
-        width: 80%;
-        max-width: $image-size * 1.5;
-      }
-  
-      .info {
-        width: 100%;
-        text-align: center;
-      }
-    }
-  }
-  
-  @media (max-width: 600px) {
-    .animal-details {
       width: 100%;
-      padding: $gap-width / 2;
-  
-      img {
-        width: 100%;
-      }
+      text-align: center;
     }
   }
+}
+
+@media (max-width: 600px) {
+  .animal-details {
+    width: 100%;
+    padding: $gap-width / 2;
+
+    img {
+      width: 100%;
+    }
+  }
+}
