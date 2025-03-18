@@ -22,6 +22,7 @@
 
 .sponsors-heading {
   font-size: $font-size-big;
+  text-align: center;
 }
 
 .links {
@@ -30,6 +31,9 @@
 
 .sponsors {
   @include container($direction: row);
+  flex-wrap: wrap; 
+  gap: $gap-width; 
+
   div {
     display: flex;
     justify-content: center;
