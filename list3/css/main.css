@@ -1,4 +1,4 @@
-a.button {
+a.button-default {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,14 +10,9 @@ a.button {
   height: 1em;
   border: none;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: center;
-  gap: 15px;
   transition: background 0.3s ease;
 }
-a.button:hover {
+a.button-default:hover {
   background-color: #0b9c62;
 }
 
@@ -215,7 +210,21 @@ footer {
 }
 .content #landing-photo {
   border-radius: 25px;
-  width: 75%;
+  width: 50%;
+}
+
+.alert-message {
+  text-align: center;
+  font-size: 20px;
+  margin: 20px 0;
+}
+
+.sponsors-heading {
+  font-size: 80px;
+}
+
+.links {
+  margin-bottom: 150px;
 }
 
 .sponsors {
@@ -229,7 +238,7 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2vw;
+  font-size: 40px;
 }
 .sponsors div img {
   width: 1em;
@@ -243,7 +252,7 @@ footer {
   flex-direction: row;
   align-items: center;
   gap: 30px;
-  max-width: 75%;
+  max-width: 112.5%;
   padding: 22.5px;
   text-align: left;
 }
@@ -268,23 +277,8 @@ footer {
 .animal-details .animal-description {
   font-size: 20px;
   color: black;
-  max-width: 400px;
+  max-width: 1000px;
   margin-top: 0;
-}
-.animal-details .adopt-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgb(15, 203, 128);
-  color: white;
-  padding: 12.5px;
-  margin-top: 15px;
-  text-decoration: none;
-  border-radius: 7.5px;
-  transition: background 0.3s ease;
-}
-.animal-details .adopt-button:hover {
-  background-color: rgb(29, 143, 97);
 }
 
 @media (max-width: 900px) {
@@ -300,7 +294,7 @@ footer {
   }
   .animal-details .info {
     width: 100%;
-    text-align: center;
+    text-align: left;
   }
 }
 @media (max-width: 600px) {
@@ -347,7 +341,7 @@ footer {
   margin-bottom: 7.5px;
 }
 .about p {
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 7.5px;
 }
 .about .social-buttons {

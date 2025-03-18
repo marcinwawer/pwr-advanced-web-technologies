@@ -10,8 +10,22 @@
 
   #landing-photo {
     border-radius: 25px;
-    width: 75%;
+    width: 50%;
   }
+}
+
+.alert-message {
+  text-align: center;
+  font-size: $font-size-small; 
+  margin: 20px 0; 
+}
+
+.sponsors-heading {
+  font-size: $font-size-big;
+}
+
+.links {
+  margin-bottom: $gap-width * 10;
 }
 
 .sponsors {
@@ -20,7 +34,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2vw;
+    font-size: $font-size-medium;
 
     img {
       width: 1em;

@@ -10,3 +10,13 @@ $container-width: 75%;
 $item-border-color: #ccc;
 $item-border-radius: 8px;
 $image-size: 200px;
+
+$font-size-big: 80px;
+$font-size-medium: 40px;
+$font-size-small: 20px;
+
+$buttons: (
+  "default": $default-button-color,
+  "dark": $dark-button-color,
+  "light": $light-button-color
+);
