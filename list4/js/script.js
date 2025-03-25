@@ -1,6 +1,5 @@
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
-    console.log(entry);
     if (entry.isIntersecting) {
       entry.target.classList.add("show");
     }
@@ -26,19 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const form = document.querySelector(".needs-validation");
-
-  form.addEventListener("submit", function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (form.checkValidity()) {
-      alert("Formularz został wysłany!");
-    }
-
-    form.classList.add("was-validated");
-  });
-
   const modal = document.getElementById("exampleModal");
   const modalContent = modal.querySelector(".modal-content");
 
