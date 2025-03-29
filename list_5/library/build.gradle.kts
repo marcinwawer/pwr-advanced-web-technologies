@@ -28,6 +28,7 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	runtimeOnly("com.h2database:h2")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 }
 
 kotlin {
