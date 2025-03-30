@@ -1,4 +1,35 @@
 package com.pwr.library.service
 
-class ReaderService {
+import com.pwr.library.model.Author
+import com.pwr.library.model.Reader
+import com.pwr.library.repository.ReaderRepository
+import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
+
+@Service
+class ReaderService(
+    private val readerRepository: ReaderRepository
+) {
+
+    fun getAllReaders(): List<Reader> = readerRepository.findAll()
+
+    fun getReaderById(id: Long): Reader? = readerRepository.findById(id).orElse(null)
+
+    fun createReader(reader: Reader): Reader = readerRepository.save(reader)
+
+    fun updateReader(id: Long, updated: Reader): Reader {
+        if (!readerRepository.existsById(id)) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "reader not found")
+        }
+        return readerRepository.save(updated.copy(id = id))
+    }
+
+    fun deleteReader(id: Long) {
+        if (readerRepository.existsById(id)) {
+            readerRepository.deleteById(id)
+        } else {
+            throw IllegalArgumentException("reader not found")
+        }
+    }
 }

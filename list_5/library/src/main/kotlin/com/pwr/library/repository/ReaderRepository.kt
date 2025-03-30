@@ -1,4 +1,6 @@
 package com.pwr.library.repository
 
-interface ReaderRepositoy {
-}
+import com.pwr.library.model.Reader
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface ReaderRepository : JpaRepository<Reader, Long>

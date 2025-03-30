@@ -1,9 +1,8 @@
 package com.pwr.library.repository
 
-import com.pwr.library.model.BorrowedBook
+import com.pwr.library.model.Borrow
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface BorrowedBookRepository : JpaRepository<BorrowedBook, Long> {
-    fun findByReaderId(readerId: Long): List<BorrowedBook>
-    fun existsByBookIdAndReturnDateIsNull(bookId: Long): Boolean
+interface BorrowRepository : JpaRepository<Borrow, Long> {
+    fun findByReaderId(readerId: Long): List<Borrow>
 }
