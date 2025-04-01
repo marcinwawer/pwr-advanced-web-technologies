@@ -12,6 +12,6 @@ class HomeController {
     @GetMapping("/")
     fun redirectToSwagger(): ResponseEntity<Void> =
         ResponseEntity.status(302)
-            .header("Location", "/swagger-ui/index.html")
+            .header("Location", "/v1/swagger-ui/index.html")
             .build()
 }

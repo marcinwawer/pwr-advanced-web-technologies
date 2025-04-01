@@ -64,5 +64,10 @@ class BookService(
         return bookRepository.save(updatedBook)
     }
 
-    fun delete(id: Long) = bookRepository.deleteById(id)
+    fun delete(id: Long) {
+        if (!bookRepository.existsById(id)) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "book not found")
+        }
+        bookRepository.deleteById(id)
+    }
 }
