@@ -15,7 +15,11 @@ class ReaderService(
 
     fun getAllReaders(pageable: Pageable): Page<Reader> = readerRepository.findAll(pageable)
 
-    fun getReaderById(id: Long): Reader? = readerRepository.findById(id).orElse(null)
+    fun getReaderById(id: Long): Reader {
+        return readerRepository.findById(id).orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "reader not found")
+        }
+    }
 
     fun createReader(reader: Reader): Reader = readerRepository.save(reader)
 
@@ -27,10 +31,9 @@ class ReaderService(
     }
 
     fun deleteReader(id: Long) {
-        if (readerRepository.existsById(id)) {
-            readerRepository.deleteById(id)
-        } else {
-            throw IllegalArgumentException("reader not found")
+        if (!readerRepository.existsById(id)) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "reader not found")
         }
+        readerRepository.deleteById(id)
     }
 }

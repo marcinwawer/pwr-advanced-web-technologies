@@ -18,7 +18,11 @@ class BookService(
 ) {
     fun getAll(pageable: Pageable): Page<Book> = bookRepository.findAll(pageable)
 
-    fun getById(id: Long): Book? = bookRepository.findById(id).orElse(null)
+    fun getById(id: Long): Book {
+        return bookRepository.findById(id).orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "book not found")
+        }
+    }
 
     fun create(bookRequest: BookRequest): Book {
         val authors = authorRepository.findAllById(bookRequest.authorIds)
@@ -44,7 +48,7 @@ class BookService(
 
     fun updateTitle(id: Long, updateRequest: BookUpdateRequest): Book {
         val book = bookRepository.findById(id).orElseThrow {
-            ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found")
+            ResponseStatusException(HttpStatus.NOT_FOUND, "book not found")
         }
 
         val updatedBook = book.copy(title = updateRequest.title)

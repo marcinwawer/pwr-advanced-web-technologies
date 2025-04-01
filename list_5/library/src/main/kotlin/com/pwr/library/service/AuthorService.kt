@@ -15,7 +15,11 @@ class AuthorService(
 ) {
     fun getAll(pageable: Pageable): Page<Author> = authorRepository.findAll(pageable)
 
-    fun getById(id: Long): Author? = authorRepository.findById(id).orElse(null)
+    fun getById(id: Long): Author {
+        return authorRepository.findById(id).orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "author not found")
+        }
+    }
 
     fun getBooksByAuthor(authorId: Long): List<Book> {
         val author = authorRepository.findById(authorId).orElseThrow {
