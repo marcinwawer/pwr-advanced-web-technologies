@@ -1,18 +1,19 @@
 package com.pwr.library.service
 
-import com.pwr.library.model.Author
 import com.pwr.library.model.Reader
 import com.pwr.library.repository.ReaderRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Page
 
 @Service
 class ReaderService(
     private val readerRepository: ReaderRepository
 ) {
 
-    fun getAllReaders(): List<Reader> = readerRepository.findAll()
+    fun getAllReaders(pageable: Pageable): Page<Reader> = readerRepository.findAll(pageable)
 
     fun getReaderById(id: Long): Reader? = readerRepository.findById(id).orElse(null)
 

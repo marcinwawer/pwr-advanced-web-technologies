@@ -6,12 +6,14 @@ import com.pwr.library.repository.AuthorRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Page
 
 @Service
 class AuthorService(
     private val authorRepository: AuthorRepository
 ) {
-    fun getAll(): List<Author> = authorRepository.findAll()
+    fun getAll(pageable: Pageable): Page<Author> = authorRepository.findAll(pageable)
 
     fun getById(id: Long): Author? = authorRepository.findById(id).orElse(null)
 

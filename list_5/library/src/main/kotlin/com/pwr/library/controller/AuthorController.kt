@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.Parameter
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -19,7 +22,14 @@ class AuthorController(
 ) {
     @Operation(summary = "Get all authors")
     @GetMapping
-    fun getAll(): List<Author> = authorService.getAll()
+    fun getAll(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") pageSize: Int
+    ): ResponseEntity<Page<Author>> {
+        val pageable: Pageable = PageRequest.of(page, pageSize)
+        val authorsPage: Page<Author> = authorService.getAll(pageable)
+        return ResponseEntity.ok(authorsPage)
+    }
 
     @Operation(summary = "Get an author by ID")
     @ApiResponses(

@@ -9,6 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+
 @Tag(name = "Readers Controller", description = "Handles all operations related to readers")
 @RestController
 @RequestMapping("/readers")
@@ -19,8 +23,13 @@ class ReaderController(
     @Operation(summary = "Get all readers")
     @ApiResponse(responseCode = "200", description = "List of all readers")
     @GetMapping
-    fun getAllReaders(): ResponseEntity<List<Reader>> {
-        return ResponseEntity.ok(readerService.getAllReaders())
+    fun getAllReaders(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") pageSize: Int
+    ): ResponseEntity<Page<Reader>> {
+        val pageable: Pageable = PageRequest.of(page, pageSize)
+        val readersPage: Page<Reader> = readerService.getAllReaders(pageable)
+        return ResponseEntity.ok(readersPage)
     }
 
     @Operation(summary = "Get a reader by ID")

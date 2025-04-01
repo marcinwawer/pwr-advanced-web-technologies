@@ -8,13 +8,15 @@ import com.pwr.library.repository.BookRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Page
 
 @Service
 class BookService(
     private val bookRepository: BookRepository,
     private val authorRepository: AuthorRepository
 ) {
-    fun getAll(): List<Book> = bookRepository.findAll()
+    fun getAll(pageable: Pageable): Page<Book> = bookRepository.findAll(pageable)
 
     fun getById(id: Long): Book? = bookRepository.findById(id).orElse(null)
 
