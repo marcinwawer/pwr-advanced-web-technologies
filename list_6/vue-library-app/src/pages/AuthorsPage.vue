@@ -1,8 +1,8 @@
 <template>
-  <div class="books-page">
+  <div class="authors-page">
     <div class="header">
-      <h1>📚 Books</h1>
-      <button class="add-btn" @click="startCreating">+ Add Book</button>
+      <h1>🧑‍💼 Authors</h1>
+      <button class="add-btn" @click="startCreating">+ Add Author</button>
     </div>
 
     <p v-if="feedbackMessage" :class="['feedback', feedbackType]">
@@ -12,19 +12,16 @@
     <div class="form-row" v-if="showForm">
       <div class="form-wrapper">
         <button class="close-btn" @click="closeForm">×</button>
-        <BookForm
-          :book="editingBook"
-          @book-saved="onBookSaved"
-        />
+        <AuthorForm :author="editingAuthor" @author-saved="onAuthorSaved" />
       </div>
     </div>
 
-    <BookList
-      :books="books"
+    <AuthorList
+      :authors="authors"
       :currentPage="page"
       :totalPages="totalPages"
-      @edit-book="startEditing"
-      @delete-book="deleteBookById"
+      @edit-author="startEditing"
+      @delete-author="deleteAuthorById"
       @next-page="nextPage"
       @prev-page="prevPage"
     />
@@ -33,63 +30,61 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import BookList from '@/components/BookList.vue'
-import BookForm from '@/components/BookForm.vue'
-import { getBooks, deleteBook } from '@/services/api'
+import AuthorForm from '@/components/AuthorForm.vue'
+import AuthorList from '@/components/AuthorList.vue'
+import { getAuthorsPage, deleteAuthor } from '@/services/api'
 
-const books = ref([])
+const authors = ref([])
 const page = ref(0)
-const editingBook = ref(null)
-const showForm = ref(false)
 const totalPages = ref(1)
+const editingAuthor = ref(null)
+const showForm = ref(false)
 
 const feedbackMessage = ref('')
 const feedbackType = ref('')
 
-const loadBooks = async () => {
-  const result = await getBooks(page.value)
-  books.value = result.books
-  totalPages.value = result.totalPages
-}
-
-const startEditing = (book) => {
-  editingBook.value = book
-  showForm.value = true
+const loadAuthors = async () => {
+  const res = await getAuthorsPage(page.value)
+  authors.value = res.authors
+  totalPages.value = res.totalPages
 }
 
 const startCreating = () => {
-  editingBook.value = null
+  editingAuthor.value = null
+  showForm.value = true
+}
+
+const startEditing = (author) => {
+  editingAuthor.value = author
   showForm.value = true
 }
 
 const closeForm = () => {
+  editingAuthor.value = null
   showForm.value = false
-  editingBook.value = null
 }
 
-const onBookSaved = async (feedback) => {
+const onAuthorSaved = async (feedback) => {
   feedbackMessage.value = feedback.message
   feedbackType.value = feedback.success ? 'success' : 'error'
-
   if (feedback.success) {
-    showForm.value = false
-    await loadBooks()
-
-    setTimeout(() => {
-      feedbackMessage.value = ''
-      feedbackType.value = ''
-    }, 3000)
+    closeForm()
+    await loadAuthors()
   }
+  setTimeout(() => {
+    feedbackMessage.value = ''
+    feedbackType.value = ''
+  }, 3000)
 }
 
-const deleteBookById = async (id) => {
+const deleteAuthorById = async (id) => {
   try {
-    await deleteBook(id)
-    await loadBooks()
-    feedbackMessage.value = 'Book deleted successfully.'
+    await deleteAuthor(id)
+    await loadAuthors()
+    feedbackMessage.value = 'Author deleted successfully.'
     feedbackType.value = 'success'
   } catch (err) {
-    let message = 'Failed to delete the book.'
+    let message = 'Failed to delete author.'
     if (err.response?.data?.message) {
       message = err.response.data.message
     }
@@ -105,21 +100,21 @@ const deleteBookById = async (id) => {
 
 const nextPage = () => {
   page.value++
-  loadBooks()
+  loadAuthors()
 }
 
 const prevPage = () => {
   if (page.value > 0) {
     page.value--
-    loadBooks()
+    loadAuthors()
   }
 }
 
-onMounted(loadBooks)
+onMounted(loadAuthors)
 </script>
 
 <style scoped>
-.books-page {
+.authors-page {
   padding: 20px 40px;
   background-color: #f9f9fb;
   min-height: 100vh;
@@ -181,7 +176,7 @@ onMounted(loadBooks)
 .form-wrapper {
   position: relative;
   width: 100%;
-  max-width: 800px;
+  max-width: 500px;
 }
 
 .close-btn {

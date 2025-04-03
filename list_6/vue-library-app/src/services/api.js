@@ -35,3 +35,28 @@ export const getAuthors = async (page = 0, size = 100) => {
   const res = await axios.get(`${API_URL}/authors?page=${page}&pageSize=${size}`)
   return res.data
 }
+
+export const getAuthorsPage = async (page = 0, size = 10) => {
+    const res = await axios.get(`${API_URL}/authors?page=${page}&pageSize=${size}`)
+    return {
+      authors: res.data.content,
+      totalPages: res.data.totalPages
+    }
+  }
+  
+export const createAuthor = async (author) => {
+return (await axios.post(`${API_URL}/authors`, author)).data
+}
+
+export const updateAuthor = async (id, author) => {
+return (await axios.put(`${API_URL}/authors/${id}`, author)).data
+}
+
+export const deleteAuthor = async (id) => {
+return await axios.delete(`${API_URL}/authors/${id}`)
+}
+
+export const getBooksByAuthor = async (authorId) => {
+const res = await axios.get(`${API_URL}/authors/${authorId}/books`)
+return res.data
+}

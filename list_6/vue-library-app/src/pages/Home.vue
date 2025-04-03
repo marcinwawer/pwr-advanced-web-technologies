@@ -12,7 +12,7 @@
       </router-link>
 
       <router-link to="/authors" class="action-card">
-        <h2>👥 Authors</h2>
+        <h2>🧑‍💼 Authors</h2>
         <p>View author list and manage them.</p>
       </router-link>
     </div>

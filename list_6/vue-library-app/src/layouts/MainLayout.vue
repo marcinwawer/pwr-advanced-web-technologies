@@ -15,6 +15,9 @@
         <router-link to="/books" exact-active-class="active-link">
           📚 Books
         </router-link>
+        <router-link to="/authors" exact-active-class="active-link">
+          🧑‍💼 Authors
+        </router-link>
       </nav>
     </aside>
     <main class="content">

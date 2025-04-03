@@ -3,6 +3,7 @@ package com.pwr.library.service
 import com.pwr.library.model.Author
 import com.pwr.library.model.Book
 import com.pwr.library.repository.AuthorRepository
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -41,6 +42,11 @@ class AuthorService(
         if (!authorRepository.existsById(id)) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "author not found")
         }
-        authorRepository.deleteById(id)
+
+        try {
+            authorRepository.deleteById(id)
+        } catch (ex: DataIntegrityViolationException) {
+            throw ResponseStatusException(HttpStatus.CONFLICT, "cannot delete author: still linked to books")
+        }
     }
 }
