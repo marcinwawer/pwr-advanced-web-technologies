@@ -26,11 +26,16 @@ class BookController(
     @GetMapping
     fun getAll(
         @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") pageSize: Int
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(required = false) search: String?
     ): ResponseEntity<Page<Book>> {
-        val pageable: Pageable = PageRequest.of(page, pageSize)
-        val booksPage: Page<Book> = bookService.getAll(pageable)
-        return ResponseEntity.ok(booksPage)
+        val pageable = PageRequest.of(page, pageSize)
+        val result = if (search.isNullOrBlank()) {
+            bookService.getAll(pageable)
+        } else {
+            bookService.searchByTitle(search, pageable)
+        }
+        return ResponseEntity.ok(result)
     }
 
     @Operation(summary = "Get a book by ID")

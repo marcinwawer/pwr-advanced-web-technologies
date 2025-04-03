@@ -24,6 +24,10 @@ class BookService(
         }
     }
 
+    fun searchByTitle(query: String, pageable: Pageable): Page<Book> {
+        return bookRepository.findByTitleContainingIgnoreCase(query, pageable)
+    }
+
     fun create(bookRequest: BookRequest): Book {
         val authors = authorRepository.findAllById(bookRequest.authorIds)
 

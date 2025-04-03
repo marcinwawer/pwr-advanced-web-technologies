@@ -26,7 +26,7 @@
     </div>
 
     <AuthorList
-      :authors="filteredAuthors"
+      :authors="authors"
       :currentPage="page"
       :totalPages="totalPages"
       @edit-author="startEditing"
@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import AuthorForm from '@/components/AuthorForm.vue'
 import AuthorList from '@/components/AuthorList.vue'
 import { getAuthorsPage, deleteAuthor } from '@/services/api'
@@ -53,17 +53,16 @@ const feedbackMessage = ref('')
 const feedbackType = ref('')
 const searchQuery = ref('')
 
-const filteredAuthors = computed(() =>
-  authors.value.filter(author =>
-    `${author.name} ${author.surname}`.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-)
-
 const loadAuthors = async () => {
-  const res = await getAuthorsPage(page.value)
+  const res = await getAuthorsPage(page.value, 10, searchQuery.value)
   authors.value = res.authors
   totalPages.value = res.totalPages
 }
+
+watch(searchQuery, () => {
+  page.value = 0 
+  loadAuthors()
+})
 
 const startCreating = () => {
   editingAuthor.value = null

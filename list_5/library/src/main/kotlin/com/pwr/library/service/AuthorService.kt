@@ -29,6 +29,10 @@ class AuthorService(
         return author.books
     }
 
+    fun searchByNameOrSurname(query: String, pageable: Pageable): Page<Author> {
+        return authorRepository.findByNameContainingIgnoreCaseOrSurnameContainingIgnoreCase(query, query, pageable)
+    }
+
     fun create(author: Author): Author = authorRepository.save(author)
 
     fun update(id: Long, updated: Author): Author {

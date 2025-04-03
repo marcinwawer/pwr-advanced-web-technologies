@@ -24,11 +24,16 @@ class AuthorController(
     @GetMapping
     fun getAll(
         @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") pageSize: Int
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(required = false) search: String?
     ): ResponseEntity<Page<Author>> {
-        val pageable: Pageable = PageRequest.of(page, pageSize)
-        val authorsPage: Page<Author> = authorService.getAll(pageable)
-        return ResponseEntity.ok(authorsPage)
+        val pageable = PageRequest.of(page, pageSize)
+        val result = if (search.isNullOrBlank()) {
+            authorService.getAll(pageable)
+        } else {
+            authorService.searchByNameOrSurname(search, pageable)
+        }
+        return ResponseEntity.ok(result)
     }
 
     @Operation(summary = "Get an author by ID")

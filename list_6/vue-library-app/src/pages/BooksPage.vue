@@ -29,7 +29,7 @@
     </div>
 
     <BookList
-      :books="filteredBooks"
+      :books="books"
       :currentPage="page"
       :totalPages="totalPages"
       @edit-book="startEditing"
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import BookList from '@/components/BookList.vue'
 import BookForm from '@/components/BookForm.vue'
 import { getBooks, deleteBook } from '@/services/api'
@@ -52,18 +52,17 @@ const editingBook = ref(null)
 const showForm = ref(false)
 const totalPages = ref(1)
 
-const searchQuery = ref('')
 const feedbackMessage = ref('')
 const feedbackType = ref('')
+const searchQuery = ref('')
 
-const filteredBooks = computed(() =>
-  books.value.filter(book =>
-    book.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-)
+watch(searchQuery, () => {
+  page.value = 0
+  loadBooks()
+})
 
 const loadBooks = async () => {
-  const result = await getBooks(page.value)
+  const result = await getBooks(page.value, 10, searchQuery.value)
   books.value = result.books
   totalPages.value = result.totalPages
 }
