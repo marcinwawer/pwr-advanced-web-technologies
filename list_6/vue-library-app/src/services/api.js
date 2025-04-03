@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const API_URL = 'http://localhost:8080/v1'
 
-// Books
+// BOOKS
 export const getBooks = async (page = 0, size = 10, search = '') => {
     const params = new URLSearchParams({ page, pageSize: size })
     if (search) {
@@ -35,12 +35,7 @@ export const deleteBook = async (id) => {
   return await axios.delete(`${API_URL}/books/${id}`)
 }
 
-// Authors
-export const getAuthors = async (page = 0, size = 100) => {
-  const res = await axios.get(`${API_URL}/authors?page=${page}&pageSize=${size}`)
-  return res.data
-}
-
+// AUTHORS
 export const getAuthorsPage = async (page = 0, size = 10, search = '') => {
     const params = new URLSearchParams({
       page,
