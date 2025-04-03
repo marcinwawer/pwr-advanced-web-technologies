@@ -9,12 +9,14 @@ const routes = [
     component: MainLayout,
     children: [
       { path: '', name: 'Home', component: Home },
-      { path: 'books', name: 'Books', component: BooksPage }
+      { path: 'books', name: 'Books', component: BooksPage },
+      { path: 'authors', name: 'Authors', component: BooksPage }
     ]
   }
 ]
 
 export default createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  linkExactActiveClass: 'exact-active-link'
 })
