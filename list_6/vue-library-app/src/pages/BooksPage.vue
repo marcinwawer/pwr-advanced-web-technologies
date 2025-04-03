@@ -19,8 +19,17 @@
       </div>
     </div>
 
+    <div class="search-bar">
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="Search books by title..."
+        class="search-input"
+      />
+    </div>
+
     <BookList
-      :books="books"
+      :books="filteredBooks"
       :currentPage="page"
       :totalPages="totalPages"
       @edit-book="startEditing"
@@ -32,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import BookList from '@/components/BookList.vue'
 import BookForm from '@/components/BookForm.vue'
 import { getBooks, deleteBook } from '@/services/api'
@@ -43,8 +52,15 @@ const editingBook = ref(null)
 const showForm = ref(false)
 const totalPages = ref(1)
 
+const searchQuery = ref('')
 const feedbackMessage = ref('')
 const feedbackType = ref('')
+
+const filteredBooks = computed(() =>
+  books.value.filter(book =>
+    book.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+)
 
 const loadBooks = async () => {
   const result = await getBooks(page.value)
@@ -129,7 +145,7 @@ onMounted(loadBooks)
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .header h1 {
@@ -152,6 +168,24 @@ onMounted(loadBooks)
 
 .add-btn:hover {
   background-color: #6a4b7a;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #7b5e8b;
 }
 
 .feedback {

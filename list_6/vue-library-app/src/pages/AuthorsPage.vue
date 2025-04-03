@@ -16,8 +16,17 @@
       </div>
     </div>
 
+    <div class="search-bar">
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="Search authors..."
+        class="search-input"
+      />
+    </div>
+
     <AuthorList
-      :authors="authors"
+      :authors="filteredAuthors"
       :currentPage="page"
       :totalPages="totalPages"
       @edit-author="startEditing"
@@ -29,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import AuthorForm from '@/components/AuthorForm.vue'
 import AuthorList from '@/components/AuthorList.vue'
 import { getAuthorsPage, deleteAuthor } from '@/services/api'
@@ -42,6 +51,13 @@ const showForm = ref(false)
 
 const feedbackMessage = ref('')
 const feedbackType = ref('')
+const searchQuery = ref('')
+
+const filteredAuthors = computed(() =>
+  authors.value.filter(author =>
+    `${author.name} ${author.surname}`.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+)
 
 const loadAuthors = async () => {
   const res = await getAuthorsPage(page.value)
@@ -124,7 +140,7 @@ onMounted(loadAuthors)
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .header h1 {
@@ -147,6 +163,24 @@ onMounted(loadAuthors)
 
 .add-btn:hover {
   background-color: #6a4b7a;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #7b5e8b;
 }
 
 .feedback {
