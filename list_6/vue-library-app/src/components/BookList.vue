@@ -13,7 +13,7 @@
       <tbody>
         <tr v-for="book in books" :key="book.id">
           <td>{{ book.title }}</td>
-          <td>{{ book.authors?.map(a => a.name).join(', ') }}</td>
+          <td>{{ book.authors?.map(a => a.name + ' ' + a.surname).join(', ') }}</td>
           <td class="actions">
             <button class="edit-btn" @click="$emit('edit-book', book)">Edit</button>
             <button class="delete-btn" @click="$emit('delete-book', book.id)">Delete</button>

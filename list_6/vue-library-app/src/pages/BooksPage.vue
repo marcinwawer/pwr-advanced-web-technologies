@@ -9,11 +9,15 @@
       {{ feedbackMessage }}
     </p>
 
-    <BookForm
-      v-if="showForm"
-      :book="editingBook"
-      @book-saved="onBookSaved"
-    />
+    <div class="form-row" v-if="showForm">
+      <div class="form-wrapper">
+        <button class="close-btn" @click="closeForm">×</button>
+        <BookForm
+          :book="editingBook"
+          @book-saved="onBookSaved"
+        />
+      </div>
+    </div>
 
     <BookList
       :books="books"
@@ -40,7 +44,7 @@ const showForm = ref(false)
 const totalPages = ref(1)
 
 const feedbackMessage = ref('')
-const feedbackType = ref('') // 'success' or 'error'
+const feedbackType = ref('')
 
 const loadBooks = async () => {
   const result = await getBooks(page.value)
@@ -56,6 +60,11 @@ const startEditing = (book) => {
 const startCreating = () => {
   editingBook.value = null
   showForm.value = true
+}
+
+const closeForm = () => {
+  showForm.value = false
+  editingBook.value = null
 }
 
 const onBookSaved = async (feedback) => {
@@ -88,7 +97,6 @@ const deleteBookById = async (id) => {
     feedbackType.value = 'error'
   }
 
-  // Auto-clear feedback after 3s
   setTimeout(() => {
     feedbackMessage.value = ''
     feedbackType.value = ''
@@ -162,5 +170,39 @@ onMounted(loadBooks)
 .feedback.error {
   background-color: #fbeaea;
   color: #d32f2f;
+}
+
+
+.form-row {
+  display: flex;
+  justify-content: left;
+  margin-bottom: 20px;
+}
+
+.form-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+}
+
+.close-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+  z-index: 10;
+}
+
+.close-btn:hover {
+  background-color: #b71c1c;
 }
 </style>

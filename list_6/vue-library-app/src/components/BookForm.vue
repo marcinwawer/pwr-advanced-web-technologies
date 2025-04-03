@@ -7,9 +7,17 @@
 
     <div class="form-group">
       <label>Authors</label>
+
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="Search authors..."
+        class="search-input"
+      />
+
       <div class="checkbox-group">
         <label
-          v-for="author in allAuthors"
+          v-for="author in filteredAuthors"
           :key="author.id"
           class="checkbox-item"
         >
@@ -18,7 +26,8 @@
             :value="author.id"
             v-model="form.authors"
           />
-          {{ author.name }}
+          <span class="custom-checkbox"></span>
+          {{ author.name }} {{ author.surname }}
         </label>
       </div>
     </div>
@@ -43,6 +52,7 @@ const form = ref({
 
 const isEdit = computed(() => !!props.book?.id)
 const allAuthors = ref([])
+const searchQuery = ref('')
 
 const loadAuthors = async () => {
   const res = await getAuthors(0, 100)
@@ -55,6 +65,13 @@ const fillForm = () => {
     form.value.authors = props.book.authors?.map(a => a.id) || []
   }
 }
+
+const filteredAuthors = computed(() => {
+  const query = searchQuery.value.toLowerCase()
+  return allAuthors.value.filter(author =>
+    `${author.name} ${author.surname}`.toLowerCase().includes(query)
+  )
+})
 
 const handleSubmit = async () => {
   try {
@@ -101,76 +118,120 @@ watch(() => props.book, fillForm)
 </script>
 
 <style scoped>
-  .book-form {
-    background-color: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    max-width: 500px;
-    margin-bottom: 30px;
-  }
+.book-form {
+  background-color: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+  margin-bottom: 30px;
+}
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
 
-  label {
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #483248;
-  }
+label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #483248;
+}
 
-  input,
-  select {
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border 0.2s ease;
-  }
+input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s ease;
+}
 
-  input:focus,
-  select:focus {
-    border-color: #7b5e8b;
-  }
+input:focus {
+  border-color: #7b5e8b;
+}
 
-  select[multiple] {
-    min-height: 100px;
-  }
+.search-input {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  outline: none;
+}
 
-  .submit-btn {
-    background-color: #7b5e8b;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    font-size: 0.95rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
+.search-input:focus {
+  border-color: #7b5e8b;
+}
 
-  .submit-btn:hover {
-    background-color: #6a4b7a;
-  }
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background-color: #f5f0f8;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
 
-  .checkbox-group {
-    display: flex;
-    flex-direction: column; 
-    gap: 10px;
-    padding: 12px;
-    background-color: #f5f0f8;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-  }
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #483248;
+  gap: 10px;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
 
-  .checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.95rem;
-    color: #483248;
-  }
+.checkbox-item input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  height: 0;
+  width: 0;
+}
+
+.custom-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #7b5e8b;
+  border-radius: 6px;
+  display: inline-block;
+  position: relative;
+  transition: 0.2s ease;
+}
+
+.checkbox-item input[type="checkbox"]:checked + .custom-checkbox::before {
+  content: '✔';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+}
+
+.checkbox-item input[type="checkbox"]:checked + .custom-checkbox {
+  background-color: #7b5e8b;
+  border-color: #7b5e8b;
+}
+
+.submit-btn {
+  background-color: #7b5e8b;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 15px;
+}
+
+.submit-btn:hover {
+  background-color: #6a4b7a;
+}
 </style>
