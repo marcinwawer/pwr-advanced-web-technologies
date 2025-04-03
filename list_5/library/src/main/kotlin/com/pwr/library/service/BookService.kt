@@ -66,6 +66,10 @@ class BookService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "one or more authors not found")
         }
 
+        if (authors.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "book must have valid author")
+        }
+
         val updatedBook = book.copy(authors = authors)
         return bookRepository.save(updatedBook)
     }
