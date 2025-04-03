@@ -4,8 +4,11 @@ const API_URL = 'http://localhost:8080/v1'
 
 // Books
 export const getBooks = async (page = 0, size = 10) => {
-  const res = await axios.get(`${API_URL}/books?page=${page}&pageSize=${size}`)
-  return res.data.content
+    const res = await axios.get(`${API_URL}/books?page=${page}&pageSize=${size}`)
+    return {
+      books: res.data.content,
+      totalPages: res.data.totalPages
+    }
 }
 
 export const createBook = async (book) => {
