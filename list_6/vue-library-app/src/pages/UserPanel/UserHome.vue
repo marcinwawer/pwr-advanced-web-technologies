@@ -10,6 +10,11 @@
         <h2>📚 Books</h2>
         <p>Browse books and book them!</p>
       </router-link>
+
+      <router-link to="/user/borrows" class="action-card">
+        <h2>❤️ My borrows</h2>
+        <p>Manage your borrows!</p>
+      </router-link>
     </div>
   </div>
 </template>
