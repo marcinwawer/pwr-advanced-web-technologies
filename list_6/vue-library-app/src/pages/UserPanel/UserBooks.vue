@@ -64,7 +64,7 @@ import { ref, onMounted, watch } from "vue";
 import { getBooks, borrowBook } from "@/services/api";
 
 const books = ref([]);
-const currentPage = ref(0); // Używamy currentPage zamiast page.value
+const currentPage = ref(0);
 const totalPages = ref(1);
 const showModal = ref(false);
 const selectedBook = ref(null);
@@ -72,32 +72,27 @@ const searchQuery = ref("");
 const feedbackMessage = ref("");
 const feedbackType = ref("");
 
-// Watch search query i resetowanie strony
 watch(searchQuery, () => {
-  currentPage.value = 0; // Resetuj stronę do 0 przy zmianie zapytania
+  currentPage.value = 0;
   loadBooks();
 });
 
-// Funkcja ładowania książek z API
 const loadBooks = async () => {
   const result = await getBooks(currentPage.value, 12, searchQuery.value);
   books.value = result.books;
   totalPages.value = result.totalPages;
 };
 
-// Funkcja otwierania modalu
 const openModal = (book) => {
   selectedBook.value = book;
   showModal.value = true;
 };
 
-// Funkcja zamykania modalu
 const closeModal = () => {
   selectedBook.value = null;
   showModal.value = false;
 };
 
-// Funkcja potwierdzenia wypożyczenia
 const confirmBorrow = async () => {
   try {
     await borrowBook({ readerID: 4, bookId: selectedBook.value.id });
@@ -115,7 +110,6 @@ const confirmBorrow = async () => {
   }
 };
 
-// Funkcja zmiany strony
 const changePage = (newPage) => {
   if (newPage >= 0 && newPage < totalPages.value) {
     currentPage.value = newPage;
@@ -123,7 +117,6 @@ const changePage = (newPage) => {
   }
 };
 
-// Ładowanie książek przy montowaniu komponentu
 onMounted(loadBooks);
 </script>
 

@@ -27,6 +27,13 @@
       </div>
       <nav class="nav-links">
         <router-link
+          :to="{ name: 'UserHome' }"
+          exact-active-class="active-link"
+        >
+          🏠 Home
+        </router-link>
+
+        <router-link
           :to="{ name: 'UserBooks' }"
           exact-active-class="active-link"
         >
