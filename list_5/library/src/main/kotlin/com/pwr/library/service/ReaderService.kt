@@ -1,5 +1,6 @@
 package com.pwr.library.service
 
+import com.pwr.library.model.Author
 import com.pwr.library.model.Reader
 import com.pwr.library.repository.ReaderRepository
 import org.springframework.http.HttpStatus
@@ -19,6 +20,10 @@ class ReaderService(
         return readerRepository.findById(id).orElseThrow {
             ResponseStatusException(HttpStatus.NOT_FOUND, "reader not found")
         }
+    }
+
+    fun searchByNameOrEmail(query: String, pageable: Pageable): Page<Reader> {
+        return readerRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(query, query, pageable)
     }
 
     fun createReader(reader: Reader): Reader = readerRepository.save(reader)

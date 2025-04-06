@@ -25,11 +25,16 @@ class ReaderController(
     @GetMapping
     fun getAllReaders(
         @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") pageSize: Int
+        @RequestParam(defaultValue = "10") pageSize: Int,
+        @RequestParam(required = false) search: String?
     ): ResponseEntity<Page<Reader>> {
-        val pageable: Pageable = PageRequest.of(page, pageSize)
-        val readersPage: Page<Reader> = readerService.getAllReaders(pageable)
-        return ResponseEntity.ok(readersPage)
+        val pageable = PageRequest.of(page, pageSize)
+        val result = if (search.isNullOrBlank()) {
+            readerService.getAllReaders(pageable)
+        } else {
+            readerService.searchByNameOrEmail(search, pageable)
+        }
+        return ResponseEntity.ok(result)
     }
 
     @Operation(summary = "Get a reader by ID")
