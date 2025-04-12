@@ -2,6 +2,8 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8080/v1";
 
+
+
 // BOOKS
 export const getBooks = async (page = 0, size = 10, search = "") => {
   const params = new URLSearchParams({ page, pageSize: size });
@@ -42,6 +44,8 @@ export const deleteBook = async (id) => {
   return await axios.delete(`${API_URL}/books/${id}`);
 };
 
+
+
 // AUTHORS
 export const getAuthorsPage = async (page = 0, size = 10, search = "") => {
   const params = new URLSearchParams({
@@ -76,6 +80,8 @@ export const getBooksByAuthor = async (authorId) => {
   return res.data;
 };
 
+
+
 // READERS
 export const getReadersPage = async (page = 0, size = 10, search = "") => {
   const params = new URLSearchParams({
@@ -105,8 +111,9 @@ export const deleteReader = async (id) => {
   return await axios.delete(`${API_URL}/readers/${id}`);
 };
 
-//BORROWS
 
+
+//BORROWS
 export const borrowBook = async ({ readerID, bookId }) => {
   const response = await axios.post(`${API_URL}/borrows`, { readerID, bookId });
   return response.data;
