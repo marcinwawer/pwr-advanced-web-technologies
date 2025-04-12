@@ -1,0 +1,26 @@
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  login: String!
+  todos: [Todo!]!
+}
+
+type Todo {
+  id: ID!
+  title: String!
+  completed: Boolean!
+  user: User!
+}
+
+type Query {
+  users: [User!]!
+  user(id: ID!): User
+  todos: [Todo!]!
+  todo(id: ID!): Todo
+}
+
+type Mutation {
+  syncTodos: String
+  syncUsers: String
+}
