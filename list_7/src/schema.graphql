@@ -20,7 +20,21 @@ type Query {
   todo(id: ID!): Todo
 }
 
+input CreateTodoInput {
+  title: String!
+  completed: Boolean!
+  userId: ID!
+}
+
+input UpdateTodoInput {
+  title: String
+  completed: Boolean
+}
+
 type Mutation {
   syncTodos: String
   syncUsers: String
+  createTodo(input: CreateTodoInput!): Todo
+  updateTodo(id: ID!, input: UpdateTodoInput!): Todo
+  deleteTodo(id: ID!): Todo
 }
