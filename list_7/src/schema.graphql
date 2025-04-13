@@ -31,10 +31,27 @@ input UpdateTodoInput {
   completed: Boolean
 }
 
+input CreateUserInput {
+  name: String!
+  email: String!
+  login: String!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  login: String
+}
+
 type Mutation {
   syncTodos: String
   syncUsers: String
+
   createTodo(input: CreateTodoInput!): Todo
   updateTodo(id: ID!, input: UpdateTodoInput!): Todo
   deleteTodo(id: ID!): Todo
+
+  createUser(input: CreateUserInput!): User
+  updateUser(id: ID!, input: UpdateUserInput!): User
+  deleteUser(id: ID!): User
 }
