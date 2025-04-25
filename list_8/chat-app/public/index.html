@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Live chat</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="rooms"></div>
+
+  <div id="chat" class="chat" style="display:none">
+    <div id="chat-header" class="chat-header">
+      <button id="leave-btn" class="leave-btn">← Powrót</button>
+      <span id="current-room" class="room-name"></span>
+    </div>
+
+    <div class="chat-body">
+      <aside id="users" class="users-list"></aside>
+      <main class="chat-main">
+        <div id="messages" class="messages"></div>
+        <div id="typing" class="typing"></div>
+        <form id="form" class="chat-form">
+          <input id="imgInput" type="file" accept="image/*" class="img-input"/>
+          <input id="input" placeholder="message..." autocomplete="off" class="text-input"/>
+          <button type="submit" class="send-btn">Send</button>
+        </form>
+      </main>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js" type="module"></script>
+  <div id="image-modal" class="image-modal" style="display:none">
+    <img id="modal-img" class="modal-img" />
+  </div>
+  <script src="client.js" type="module"></script>
+</body>
+</html>
