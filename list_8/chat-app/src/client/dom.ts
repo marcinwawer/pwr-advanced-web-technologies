@@ -1,0 +1,12 @@
+export const leaveBtn = document.getElementById('leave-btn') as HTMLButtonElement;
+export const currentRoomSpan = document.getElementById('current-room') as HTMLSpanElement;
+export const roomsContainer = document.getElementById('rooms') as HTMLDivElement;
+export const chatContainer = document.getElementById('chat') as HTMLDivElement;
+export const usersList = document.getElementById('users') as HTMLDivElement;
+export const messagesList = document.getElementById('messages') as HTMLDivElement;
+export const typingDiv = document.getElementById('typing') as HTMLDivElement;
+export const form = document.getElementById('form') as HTMLFormElement;
+export const input = document.getElementById('input') as HTMLInputElement;
+export const imgInput = document.getElementById('imgInput') as HTMLInputElement;
+export const imageModal = document.getElementById('image-modal') as HTMLDivElement;
+export const modalImg = document.getElementById('modal-img') as HTMLImageElement;
