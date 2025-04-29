@@ -24,73 +24,77 @@ type Message =
       date: string;
       type: "message";
     }
-  | { id: string; author: string; date: string; imgUrl: string; type: "image" };
+  | {
+      id: string;
+      author: string;
+      date: string;
+      imgUrl: string;
+      type: "image";
+    }
+  | {
+      id: string;
+      author: string;
+      to: string;
+      message: string;
+      date: string;
+      type: "private";
+    };
 
 export default function Home() {
   const [nickname, setNickname] = useState("");
+  const [room, setRoom] = useState("general");
   const [messageHistory, setMessageHistory] = useState<(Message | string)[]>(
     []
   );
-  const [room, setRoom] = useState("general");
-  const socket = useRef<Socket | null>(null);
+  const [usersOnline, setUsersOnline] = useState<string[]>([]);
+  const [privateRecipient, setPrivateRecipient] = useState<string | null>(
+    null
+  );
   const [someoneTyping, setSomeoneTyping] = useState("");
+  const socket = useRef<Socket | null>(null);
 
   useEffect(() => {
-    if (!nickname) {
-      return;
-    }
-    socket.current = io(SOCKET_URL, {
-      query: {
-        nickname: nickname,
-      },
-    });
-    socket.current.on("connect_error", (err: Error) => {
+    if (!nickname) return;
+    const s = io(SOCKET_URL, { query: { nickname } });
+    s.on("connect_error", (err: Error) => {
       if (err.message === "NICK_IN_USE") {
         alert("This nick is already taken – choose another.");
         setNickname("");
-        socket.current?.disconnect();
-      } else {
-        console.error("Connection error:", err);
+        s.disconnect();
       }
     });
-    socket.current.on("message", (arg) => {
+    s.on("message", (arg) => {
       setMessageHistory((prev) => [...prev, arg]);
     });
-    socket.current.on("typing", (arg) => {
+    s.on("typing", (arg) => {
       setSomeoneTyping(arg);
     });
-    socket.current.on("stop_typing", () => {
+    s.on("stop_typing", () => {
       setSomeoneTyping("");
     });
-    socket.current.on("image_message", (data) => {
+    s.on("image_message", (data) => {
       setMessageHistory((prev) => [...prev, data]);
     });
+    s.on("update_user_list", (users: string[]) => {
+      setUsersOnline(users);
+    });
+    s.on("private_message", (data) => {
+      setMessageHistory((prev) => [...prev, { ...data, type: "private" }]);
+    });
+    s.on("error_message", (msg: string) => {
+      alert(msg);
+    });
+    socket.current = s;
+    return () => {
+      s.disconnect();
+      socket.current = null;
+    };
   }, [nickname]);
-
-  if (!nickname) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <form
-          className="flex flex-col items-center gap-8 w-1/4"
-          action={(formData: FormData) => {
-            const nicknameInput = formData.get("nickname");
-            if (!nicknameInput) {
-              alert("Nickname is required");
-              return;
-            }
-            setNickname(nicknameInput as string);
-          }}
-        >
-          <Input name="nickname" placeholder="Enter your nickname" />
-          <Button type="submit">Join chat!</Button>
-        </form>
-      </div>
-    );
-  }
 
   const changeRoom = (roomSelected: string) => {
     if (roomSelected !== room) {
       setMessageHistory([]);
+      setPrivateRecipient(null);
       setRoom(roomSelected);
       socket.current?.emit("switch_room", roomSelected);
     }
@@ -113,6 +117,54 @@ export default function Home() {
     }
   };
 
+  const handleSend = (text: string) => {
+    const id = crypto.randomUUID();
+    const date = new Date().toISOString();
+    if (privateRecipient) {
+      if (privateRecipient === nickname) {
+        alert("You cannot send a private message to yourself.");
+        setPrivateRecipient(null);
+        return;
+      }
+      socket.current?.emit("private_message", {
+        to: privateRecipient,
+        message: text,
+        id,
+        date,
+      });
+    } else {
+      socket.current?.emit("send_message", {
+        id,
+        author: nickname,
+        date,
+        message: text,
+        type: "message",
+      });
+    }
+    socket.current?.emit("stop_typing");
+  };
+
+  if (!nickname) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <form
+          className="flex flex-col items-center gap-8 w-1/4"
+          action={(formData: FormData) => {
+            const nicknameInput = formData.get("nickname");
+            if (!nicknameInput) {
+              alert("Nickname is required");
+              return;
+            }
+            setNickname(nicknameInput as string);
+          }}
+        >
+          <Input name="nickname" placeholder="Enter your nickname" />
+          <Button type="submit">Join chat!</Button>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-screen">
       <div className="flex flex-col items-center gap-8 p-4">
@@ -124,7 +176,10 @@ export default function Home() {
           >
             general
           </Button>
-          <Button disabled={room === "tech"} onClick={() => changeRoom("tech")}>
+          <Button
+            disabled={room === "tech"}
+            onClick={() => changeRoom("tech")}
+          >
             tech
           </Button>
           <Button
@@ -135,6 +190,34 @@ export default function Home() {
           </Button>
         </div>
       </div>
+      <div className="p-4 bg-gray-100">
+        <h2 className="font-semibold">Users online in room {room}:</h2>
+        <ul className="flex gap-2">
+          {usersOnline
+            .filter((user) => user !== nickname)
+            .map((user) => (
+              <li key={user}>
+                <button
+                  className={`px-2 py-1 border rounded ${
+                    privateRecipient === user
+                      ? "bg-blue-200"
+                      : "hover:bg-gray-200"
+                  }`}
+                  onClick={() =>
+                    setPrivateRecipient((prev) => (prev === user ? null : user))
+                  }
+                >
+                  {user}
+                </button>
+              </li>
+            ))}
+        </ul>
+        {privateRecipient && (
+          <div className="mt-2 text-sm text-blue-700">
+            Private message to: <strong>{privateRecipient}</strong>
+          </div>
+        )}
+      </div>
       <div className="flex-1 overflow-auto px-56">
         <div className="flex flex-col gap-4 items-center w-full">
           {messageHistory.map((message, index) =>
@@ -143,12 +226,11 @@ export default function Home() {
             ) : message.type === "message" ? (
               <Card
                 key={message.id}
-                className={`
-                  w-[350px]
-                  ${message.author === nickname
+                className={`w-[350px] ${
+                  message.author === nickname
                     ? "self-end bg-blue-100"
-                    : "self-start bg-white"}
-                `}
+                    : "self-start bg-white"
+                }`}
               >
                 <CardHeader>
                   <CardTitle>{message.author}</CardTitle>
@@ -157,20 +239,21 @@ export default function Home() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent
-                  className={message.author === nickname ? "text-blue-800" : ""}
+                  className={
+                    message.author === nickname ? "text-blue-800" : ""
+                  }
                 >
                   {message.message}
                 </CardContent>
               </Card>
-            ) : (
+            ) : message.type === "image" ? (
               <Card
                 key={message.id}
-                className={`
-                  w-[350px]
-                  ${message.author === nickname
+                className={`w-[350px] ${
+                  message.author === nickname
                     ? "self-end bg-blue-100"
-                    : "self-start bg-white"}
-                `}
+                    : "self-start bg-white"
+                }`}
               >
                 <CardHeader>
                   <CardTitle>{message.author}</CardTitle>
@@ -188,6 +271,25 @@ export default function Home() {
                     height={350}
                   />
                 </CardContent>
+              </Card>
+            ) : (
+              <Card
+                key={message.id}
+                className={`w-[350px] ${
+                  message.author === nickname
+                    ? "self-end bg-purple-100"
+                    : "self-start bg-gray-100"
+                }`}
+              >
+                <CardHeader>
+                  <CardTitle>
+                    {message.author} → {message.to}
+                  </CardTitle>
+                  <CardDescription>
+                    {new Date(message.date).toLocaleString()}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>{message.message}</CardContent>
               </Card>
             )
           )}
@@ -218,17 +320,13 @@ export default function Home() {
             </div>
           </form>
           <form
-            action={(formData: FormData) => {
-              const input = formData.get("message");
-              if (input && socket.current) {
-                socket.current.emit("send_message", {
-                  id: crypto.randomUUID(),
-                  author: nickname,
-                  date: new Date(),
-                  message: input,
-                  type: "message",
-                });
-                socket.current.emit("stop_typing");
+            onSubmit={(e) => {
+              e.preventDefault();
+              const form = e.currentTarget;
+              const input = form.message as HTMLInputElement;
+              if (input.value) {
+                handleSend(input.value);
+                input.value = "";
               }
             }}
             className="flex gap-4"
@@ -237,10 +335,10 @@ export default function Home() {
               name="message"
               placeholder="Enter your message"
               onChange={(e) => {
-                if (e.target.value !== "" && socket.current) {
-                  socket.current.emit("typing");
-                } else if (e.target.value === "" && socket.current) {
-                  socket.current.emit("stop_typing");
+                if (e.target.value !== "") {
+                  socket.current?.emit("typing");
+                } else {
+                  socket.current?.emit("stop_typing");
                 }
               }}
             />

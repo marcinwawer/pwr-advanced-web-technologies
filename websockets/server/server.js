@@ -6,7 +6,20 @@ const fs = require("fs");
 
 const app = express();
 const httpServer = createServer(app);
+
 const activeNicknames = new Set();
+const nicknameToSocketId = new Map();
+const socketIdToNickname = new Map();
+
+const emitUserList = (room) => {
+  const clients = io.sockets.adapter.rooms.get(room) || new Set();
+  const users = [];
+  for (let id of clients) {
+    const nick = socketIdToNickname.get(id);
+    if (nick) users.push(nick);
+  }
+  io.to(room).emit("update_user_list", users);
+};
 
 app.use("/uploads", express.static("uploads"));
 
@@ -36,7 +49,11 @@ io.use((socket, next) => {
 
 io.on("connection", (socket) => {
   const nickname = socket.handshake.query.nickname;
+  
   activeNicknames.add(nickname);
+  nicknameToSocketId.set(nickname, socket.id);
+  socketIdToNickname.set(socket.id, nickname);
+  
   console.log(`${nickname} connected`);
 
   let currentRoom = "general";
@@ -44,22 +61,22 @@ io.on("connection", (socket) => {
   socket.join(currentRoom);
   console.log(`${nickname} joined ${currentRoom}`);
 
+  emitUserList(currentRoom);
   io.to(currentRoom).emit(
     "message",
     `${nickname} has joined room ${currentRoom}`
   );
 
   socket.on("switch_room", (newRoom) => {
-    socket.leave(currentRoom);
-    io.to(currentRoom).emit("message", `${nickname} has left the room`);
-
+    const oldRoom = currentRoom;
+    socket.leave(oldRoom);
+    io.to(oldRoom).emit("message", `${nickname} has left the room`);
+    emitUserList(oldRoom);
+  
     currentRoom = newRoom;
     socket.join(currentRoom);
-
-    io.to(currentRoom).emit(
-      "message",
-      `${nickname} has joined room ${currentRoom}`
-    );
+    io.to(currentRoom).emit("message", `${nickname} has joined room ${currentRoom}`);
+    emitUserList(currentRoom);
   });
 
   socket.on("send_message", (msg) => {
@@ -96,10 +113,34 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("private_message", ({ to, message, id, date }) => {
+    const targetSocketId = nicknameToSocketId.get(to);
+    if (targetSocketId) {
+      io.to(targetSocketId).emit("private_message", {
+        id,
+        author: nickname,
+        date,
+        message,
+      });
+      socket.emit("private_message", {
+        id,
+        author: nickname,
+        date,
+        message,
+        to,
+      });
+    } else {
+      socket.emit("error_message", `Użytkownik ${to} jest offline.`);
+    }
+  });
+
   socket.on("disconnect", () => {
-    console.log(`${nickname} disconnected`);
     activeNicknames.delete(nickname);
+    nicknameToSocketId.delete(nickname);
+    socketIdToNickname.delete(socket.id);
+  
     io.to(currentRoom).emit("message", `${nickname} has left the room`);
+    emitUserList(currentRoom);
   });
 });
 
