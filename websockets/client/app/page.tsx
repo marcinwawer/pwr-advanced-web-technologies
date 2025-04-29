@@ -38,6 +38,14 @@ type Message =
       message: string;
       date: string;
       type: "private";
+    }
+  | {
+      id: string;
+      author: string;
+      to: string;
+      date: string;
+      imgUrl: string;
+      type: "private_image";
     };
 
 export default function Home() {
@@ -56,6 +64,7 @@ export default function Home() {
   useEffect(() => {
     if (!nickname) return;
     const s = io(SOCKET_URL, { query: { nickname } });
+
     s.on("connect_error", (err: Error) => {
       if (err.message === "NICK_IN_USE") {
         alert("This nick is already taken – choose another.");
@@ -63,6 +72,7 @@ export default function Home() {
         s.disconnect();
       }
     });
+
     s.on("message", (arg) => {
       setMessageHistory((prev) => [...prev, arg]);
     });
@@ -79,11 +89,21 @@ export default function Home() {
       setUsersOnline(users);
     });
     s.on("private_message", (data) => {
-      setMessageHistory((prev) => [...prev, { ...data, type: "private" }]);
+      setMessageHistory((prev) => [
+        ...prev,
+        { ...data, type: "private" },
+      ]);
+    });
+    s.on("private_image", (data) => {
+      setMessageHistory((prev) => [
+        ...prev,
+        { ...data, type: "private_image" },
+      ]);
     });
     s.on("error_message", (msg: string) => {
       alert(msg);
     });
+
     socket.current = s;
     return () => {
       s.disconnect();
@@ -102,19 +122,31 @@ export default function Home() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && socket.current) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        socket.current?.emit("send_image", {
-          id: crypto.randomUUID(),
+    if (!file || !socket.current) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const id = crypto.randomUUID();
+      const date = new Date().toISOString();
+      const base = (reader.result as string);
+      if (privateRecipient) {
+        socket.current?.emit("send_private_image", {
+          id,
           author: nickname,
-          date: new Date(),
-          type: "image",
-          imageData: reader.result,
+          date,
+          to: privateRecipient,
+          imageData: base,
         });
-      };
-      reader.readAsDataURL(file);
-    }
+      } else {
+        socket.current?.emit("send_image", {
+          id,
+          author: nickname,
+          date,
+          type: "image",
+          imageData: base,
+        });
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSend = (text: string) => {
@@ -150,12 +182,12 @@ export default function Home() {
         <form
           className="flex flex-col items-center gap-8 w-1/4"
           action={(formData: FormData) => {
-            const nicknameInput = formData.get("nickname");
-            if (!nicknameInput) {
+            const nick = formData.get("nickname");
+            if (!nick) {
               alert("Nickname is required");
               return;
             }
-            setNickname(nicknameInput as string);
+            setNickname(nick as string);
           }}
         >
           <Input name="nickname" placeholder="Enter your nickname" />
@@ -214,15 +246,15 @@ export default function Home() {
         </ul>
         {privateRecipient && (
           <div className="mt-2 text-sm text-blue-700">
-            Private message to: <strong>{privateRecipient}</strong>
+            Private messaging: <strong>{privateRecipient}</strong>
           </div>
         )}
       </div>
       <div className="flex-1 overflow-auto px-56">
         <div className="flex flex-col gap-4 items-center w-full">
-          {messageHistory.map((message, index) =>
+          {messageHistory.map((message, i) =>
             typeof message === "string" ? (
-              <div key={index}>{message}</div>
+              <div key={i}>{message}</div>
             ) : message.type === "message" ? (
               <Card
                 key={message.id}
@@ -272,7 +304,7 @@ export default function Home() {
                   />
                 </CardContent>
               </Card>
-            ) : (
+            ) : message.type === "private" ? (
               <Card
                 key={message.id}
                 className={`w-[350px] ${
@@ -291,10 +323,38 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>{message.message}</CardContent>
               </Card>
+            ) : (
+              <Card
+                key={message.id}
+                className={`w-[350px] ${
+                  message.author === nickname
+                    ? "self-end bg-purple-100"
+                    : "self-start bg-gray-100"
+                }`}
+              >
+                <CardHeader>
+                  <CardTitle>
+                    {message.author} → {message.to}
+                  </CardTitle>
+                  <CardDescription>
+                    {new Date(message.date).toLocaleString()}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Image
+                    src={message.imgUrl}
+                    alt="Private image"
+                    className="max-w-full h-auto"
+                    unoptimized
+                    width={350}
+                    height={350}
+                  />
+                </CardContent>
+              </Card>
             )
           )}
         </div>
-        {someoneTyping !== "" && <span className="py-2">{someoneTyping}</span>}
+        {someoneTyping && <span className="py-2">{someoneTyping}</span>}
       </div>
       <div className="w-full bg-background p-4 border-t">
         <div className="max-w-md mx-auto space-y-4">
@@ -322,8 +382,8 @@ export default function Home() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              const form = e.currentTarget;
-              const input = form.message as HTMLInputElement;
+              const input = (e.currentTarget as HTMLFormElement)
+                .message as HTMLInputElement;
               if (input.value) {
                 handleSend(input.value);
                 input.value = "";
@@ -335,7 +395,7 @@ export default function Home() {
               name="message"
               placeholder="Enter your message"
               onChange={(e) => {
-                if (e.target.value !== "") {
+                if (e.target.value) {
                   socket.current?.emit("typing");
                 } else {
                   socket.current?.emit("stop_typing");

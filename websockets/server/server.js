@@ -6,6 +6,7 @@ const fs = require("fs");
 
 const app = express();
 const httpServer = createServer(app);
+const crypto = require("crypto");
 
 const activeNicknames = new Set();
 const nicknameToSocketId = new Map();
@@ -121,6 +122,7 @@ io.on("connection", (socket) => {
         author: nickname,
         date,
         message,
+        to
       });
       socket.emit("private_message", {
         id,
@@ -132,6 +134,36 @@ io.on("connection", (socket) => {
     } else {
       socket.emit("error_message", `Użytkownik ${to} jest offline.`);
     }
+  });
+
+  socket.on("send_private_image", (imageData) => {
+    const { to } = imageData;
+    const targetSocketId = nicknameToSocketId.get(to);
+    const buffer = Buffer.from(imageData.imageData.split(",")[1], "base64");
+    const fileName = `${Date.now()}-${imageData.id}.png`;
+    const filePath = path.join(__dirname, "uploads", fileName);
+  
+    fs.writeFile(filePath, buffer, (err) => {
+      if (err) {
+        console.log("Error saving private image:", err);
+        return;
+      }
+      const payload = {
+        id: imageData.id,
+        author: imageData.author,
+        date: imageData.date,
+        to,
+        imgUrl: `http://localhost:3000/uploads/${fileName}`,
+      };
+
+      socket.emit("private_image", payload);
+
+      if (targetSocketId) {
+        io.to(targetSocketId).emit("private_image", payload);
+      } else {
+        socket.emit("error_message", `User ${to} is offline.`);
+      }
+    });
   });
 
   socket.on("disconnect", () => {
