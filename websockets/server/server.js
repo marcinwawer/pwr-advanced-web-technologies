@@ -6,6 +6,21 @@ const fs = require("fs");
 
 const app = express();
 const httpServer = createServer(app);
+const crypto = require("crypto");
+
+const activeNicknames = new Set();
+const nicknameToSocketId = new Map();
+const socketIdToNickname = new Map();
+
+const emitUserList = (room) => {
+  const clients = io.sockets.adapter.rooms.get(room) || new Set();
+  const users = [];
+  for (let id of clients) {
+    const nick = socketIdToNickname.get(id);
+    if (nick) users.push(nick);
+  }
+  io.to(room).emit("update_user_list", users);
+};
 
 app.use("/uploads", express.static("uploads"));
 
@@ -22,8 +37,24 @@ const io = new Server(httpServer, {
   },
 });
 
+io.use((socket, next) => {
+  const nickname = socket.handshake.query.nickname;
+  if (!nickname) {
+    return next(new Error("Nickname empty"));
+  }
+  if (activeNicknames.has(nickname)) {
+    return next(new Error("NICK_IN_USE"));
+  }
+  next();
+});
+
 io.on("connection", (socket) => {
   const nickname = socket.handshake.query.nickname;
+  
+  activeNicknames.add(nickname);
+  nicknameToSocketId.set(nickname, socket.id);
+  socketIdToNickname.set(socket.id, nickname);
+  
   console.log(`${nickname} connected`);
 
   let currentRoom = "general";
@@ -31,22 +62,22 @@ io.on("connection", (socket) => {
   socket.join(currentRoom);
   console.log(`${nickname} joined ${currentRoom}`);
 
+  emitUserList(currentRoom);
   io.to(currentRoom).emit(
     "message",
     `${nickname} has joined room ${currentRoom}`
   );
 
   socket.on("switch_room", (newRoom) => {
-    socket.leave(currentRoom);
-    io.to(currentRoom).emit("message", `${nickname} has left the room`);
-
+    const oldRoom = currentRoom;
+    socket.leave(oldRoom);
+    io.to(oldRoom).emit("message", `${nickname} has left the room`);
+    emitUserList(oldRoom);
+  
     currentRoom = newRoom;
     socket.join(currentRoom);
-
-    io.to(currentRoom).emit(
-      "message",
-      `${nickname} has joined room ${currentRoom}`
-    );
+    io.to(currentRoom).emit("message", `${nickname} has joined room ${currentRoom}`);
+    emitUserList(currentRoom);
   });
 
   socket.on("send_message", (msg) => {
@@ -83,9 +114,65 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("private_message", ({ to, message, id, date }) => {
+    const targetSocketId = nicknameToSocketId.get(to);
+    if (targetSocketId) {
+      io.to(targetSocketId).emit("private_message", {
+        id,
+        author: nickname,
+        date,
+        message,
+        to
+      });
+      socket.emit("private_message", {
+        id,
+        author: nickname,
+        date,
+        message,
+        to,
+      });
+    } else {
+      socket.emit("error_message", `Użytkownik ${to} jest offline.`);
+    }
+  });
+
+  socket.on("send_private_image", (imageData) => {
+    const { to } = imageData;
+    const targetSocketId = nicknameToSocketId.get(to);
+    const buffer = Buffer.from(imageData.imageData.split(",")[1], "base64");
+    const fileName = `${Date.now()}-${imageData.id}.png`;
+    const filePath = path.join(__dirname, "uploads", fileName);
+  
+    fs.writeFile(filePath, buffer, (err) => {
+      if (err) {
+        console.log("Error saving private image:", err);
+        return;
+      }
+      const payload = {
+        id: imageData.id,
+        author: imageData.author,
+        date: imageData.date,
+        to,
+        imgUrl: `http://localhost:3000/uploads/${fileName}`,
+      };
+
+      socket.emit("private_image", payload);
+
+      if (targetSocketId) {
+        io.to(targetSocketId).emit("private_image", payload);
+      } else {
+        socket.emit("error_message", `User ${to} is offline.`);
+      }
+    });
+  });
+
   socket.on("disconnect", () => {
-    console.log(`${nickname} disconnected`);
+    activeNicknames.delete(nickname);
+    nicknameToSocketId.delete(nickname);
+    socketIdToNickname.delete(socket.id);
+  
     io.to(currentRoom).emit("message", `${nickname} has left the room`);
+    emitUserList(currentRoom);
   });
 });
 
