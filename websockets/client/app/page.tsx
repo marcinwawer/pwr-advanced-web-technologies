@@ -44,6 +44,15 @@ export default function Home() {
         nickname: nickname,
       },
     });
+    socket.current.on("connect_error", (err: Error) => {
+      if (err.message === "NICK_IN_USE") {
+        alert("This nick is already taken – choose another.");
+        setNickname("");
+        socket.current?.disconnect();
+      } else {
+        console.error("Connection error:", err);
+      }
+    });
     socket.current.on("message", (arg) => {
       setMessageHistory((prev) => [...prev, arg]);
     });

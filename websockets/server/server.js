@@ -6,6 +6,7 @@ const fs = require("fs");
 
 const app = express();
 const httpServer = createServer(app);
+const activeNicknames = new Set();
 
 app.use("/uploads", express.static("uploads"));
 
@@ -22,8 +23,20 @@ const io = new Server(httpServer, {
   },
 });
 
+io.use((socket, next) => {
+  const nickname = socket.handshake.query.nickname;
+  if (!nickname) {
+    return next(new Error("Nickname empty"));
+  }
+  if (activeNicknames.has(nickname)) {
+    return next(new Error("NICK_IN_USE"));
+  }
+  next();
+});
+
 io.on("connection", (socket) => {
   const nickname = socket.handshake.query.nickname;
+  activeNicknames.add(nickname);
   console.log(`${nickname} connected`);
 
   let currentRoom = "general";
@@ -85,6 +98,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log(`${nickname} disconnected`);
+    activeNicknames.delete(nickname);
     io.to(currentRoom).emit("message", `${nickname} has left the room`);
   });
 });
