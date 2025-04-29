@@ -142,10 +142,13 @@ export default function Home() {
               <div key={index}>{message}</div>
             ) : message.type === "message" ? (
               <Card
-                className={`w-[350px] ${
-                  message.author === nickname ? "self-end" : "self-start"
-                }`}
                 key={message.id}
+                className={`
+                  w-[350px]
+                  ${message.author === nickname
+                    ? "self-end bg-blue-100"
+                    : "self-start bg-white"}
+                `}
               >
                 <CardHeader>
                   <CardTitle>{message.author}</CardTitle>
@@ -153,14 +156,21 @@ export default function Home() {
                     {new Date(message.date).toLocaleString()}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>{message.message}</CardContent>
+                <CardContent
+                  className={message.author === nickname ? "text-blue-800" : ""}
+                >
+                  {message.message}
+                </CardContent>
               </Card>
             ) : (
               <Card
-                className={`w-[350px] ${
-                  message.author === nickname ? "self-end" : "self-start"
-                }`}
                 key={message.id}
+                className={`
+                  w-[350px]
+                  ${message.author === nickname
+                    ? "self-end bg-blue-100"
+                    : "self-start bg-white"}
+                `}
               >
                 <CardHeader>
                   <CardTitle>{message.author}</CardTitle>
@@ -184,7 +194,6 @@ export default function Home() {
         </div>
         {someoneTyping !== "" && <span className="py-2">{someoneTyping}</span>}
       </div>
-
       <div className="w-full bg-background p-4 border-t">
         <div className="max-w-md mx-auto space-y-4">
           <form
